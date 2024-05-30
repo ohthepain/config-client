@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
+import './MyStuff.css';
 
 const Login = () => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -31,7 +32,7 @@ const Login = () => {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                 />
-                <button onClick={handleLogin}>Login</button>
+                <button className="menu-button" onClick={handleLogin}>Login</button>
             </div>
         );
     }

@@ -1,4 +1,5 @@
 .env
+public/env.js
 
 # Logs
 logs
