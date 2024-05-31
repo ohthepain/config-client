@@ -1,7 +1,6 @@
 export class Project {
   id: any;
   name: any;
-  //: any;
   branches: any;
   gitRepo: any;
   bucket: any;
@@ -12,7 +11,6 @@ export class Project {
   constructor(data: any) {
     this.id = data.id;
     this.name = data.name;
-    this.// = data.//;
     this.branches = data.branches;
     this.gitRepo = data.gitRepo;
     this.bucket = data.bucket;

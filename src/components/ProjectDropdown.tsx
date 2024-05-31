@@ -5,14 +5,13 @@ import { Project } from '../models/Project';
 import { Branch } from '../models/Branch';
 import { Environment } from '../models/Environment';
 import { Config } from '../models/Config';
-
-const configServiceUrl = import.meta.env.VITE_CONFIG_SERVICE_URL;
+import { fetchProjects } from '../services/RequestManager';
 
 type ProjectDropdownProps = {
-    project: Project;
-    branch: Branch;
-    environment: Environment;
-    config: Config;
+    project: Project | null;
+    branch: Branch | null;
+    environment: Environment | null;
+    config: Config | null;
 };
 
 // { project, branch, environment, config }
@@ -21,15 +20,21 @@ const ProjectDropdown: React.FC<ProjectDropdownProps> = () => {
     const [selectedProject, setSelectedProject] = useState<Project>();
     const [branches, setBranches] = useState<Branch[]>([]);
     const [selectedBranch, setSelectedBranch] = useState<Branch>();
-    const [environments, setEnvironments] = useState<Environment[]>([]);
-    const [selectedEnvironment, setSelectedEnvironment] = useState<Environment>();
+    // const [environments, setEnvironments] = useState<Environment[]>([]);
+    // const [selectedEnvironment, setSelectedEnvironment] = useState<Environment>();
     const [configs, setConfigs] = useState<Config[]>([]);
-    const [selectedConfig, setSelectedConfig] = useState<Config>();
+    // const [selectedConfig, setSelectedConfig] = useState<Config>();
 
     useEffect(() => {
-        // Fetch projects on component mount
-        fetchProjects();
+        const fetchData = async () => {
+            setProjects(await fetchProjects());
+        };
+        fetchData();
     }, []);
+
+    useEffect(() => {
+        console.log(projects);
+    }, [projects]); 
 
     useEffect(() => {
         // Fetch branches when selected project changes
@@ -45,15 +50,15 @@ const ProjectDropdown: React.FC<ProjectDropdownProps> = () => {
         }
     }, [selectedBranch]);
 
-    const fetchProjects = async () => {
-        try {
-            const response = await axios.get(`${configServiceUrl}/api/projects/`);
-            const projects = response.data.map((data: any) => new Project(data));
-            setProjects(projects);
-        } catch (error) {
-            console.error('Failed to fetch projects:', error);
-        }
-    };
+    // const fetchProjects = async () => {
+    //     try {
+    //         const response = await axios.get(`${configServiceUrl}/api/projects/`);
+    //         const projects = response.data.map((data: any) => new Project(data));
+    //         setProjects(projects);
+    //     } catch (error) {
+    //         console.error('Failed to fetch projects:', error);
+    //     }
+    // };
 
     const fetchBranches = async () => {
         try {

@@ -1,21 +1,39 @@
 import { useState } from 'react';
-import './MyStuff.css';
+
+import { authenticate } from '../services/RequestManager';
+
+import '../MyStuff.css';
 
 const Login = () => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
-    const handleLogin = () => {
-        // Call the auth method here to authenticate the user and get the JWT
-        // Save the JWT in state or local storage
-
+    const handleLogin = async () => {
+        const token: string | null = await authenticate(email, password);
+        if (token) {
+            localStorage.setItem('token', token);
+            setIsLoggedIn(true);
+        } else {
+            console.error('Failed to authenticate');
+            localStorage.removeItem('token');
+            handleLogout();
+        }
         // For demonstration purposes, let's assume the authentication is successful
-        setIsLoggedIn(true);
+    };
+
+    const handleLogout = () => {
+        localStorage.removeItem('token');
+        setIsLoggedIn(false);
     };
 
     if (isLoggedIn) {
-        return <div>Welcome, {email}</div>;
+        return (
+            <>
+            <div>Welcome, {email}</div>
+            <button className="menu-button" onClick={handleLogout}>Logout</button>
+            </>
+        )
     } else {
         // User is not logged in, show email and password fields
         return (

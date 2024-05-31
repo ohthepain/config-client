@@ -16,12 +16,16 @@ function generateModelClass(className, schemaPath, outputPath) {
 
     let classDef = `export class ${className} {\n`;
     for (const field of fields) {
-        classDef += `  ${field}: any;\n`;
+        if (field && field[0] !== '@' && field[0] !== '/') {
+            classDef += `  ${field}: any;\n`;
+        }
     }
 
     classDef += `\n  constructor(data: any) {\n`;
     for (const field of fields) {
-        classDef += `    this.${field} = data.${field};\n`;
+        if (field && field[0] !== '@' && field[0] !== '/') {
+            classDef += `    this.${field} = data.${field};\n`;
+        }
     }
     classDef += '  }\n';
     classDef += '}\n';

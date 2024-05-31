@@ -13,7 +13,7 @@ function App() {
   return (
     <>
     <div>
-    <ProjectDropdown></ProjectDropdown>
+    <ProjectDropdown project={null} branch={null} environment={null} config={null}></ProjectDropdown>
     <Login></Login>
     </div>
       <div>
@@ -24,7 +24,7 @@ function App() {
           <img src={reactLogo} className="logo react" alt="React logo" />
         </a>
       </div>
-      <h1>Vite + React Rawks!</h1>
+      <h1>Vite + React Rawks On!</h1>
       <div className="card">
         <button onClick={() => {
             setCount((count) => count + 1)
