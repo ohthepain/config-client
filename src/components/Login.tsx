@@ -1,25 +1,29 @@
 import { useState } from 'react';
 
 import { authenticate } from '../services/RequestManager';
-
-import '../MyStuff.css';
+import { useStore } from '../store';
+import '../AppMenu.css';
+import { fetchEnvironments } from '../services/RequestManager';
 
 const Login = () => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
+    const { email, setEmail, password, setPassword, projectId } = useStore();
 
     const handleLogin = async () => {
-        const token: string | null = await authenticate(email, password);
-        if (token) {
-            localStorage.setItem('token', token);
-            setIsLoggedIn(true);
-        } else {
-            console.error('Failed to authenticate');
-            localStorage.removeItem('token');
-            handleLogout();
+        if (email && password) {
+            const token: string | null = await authenticate(email, password);
+            if (token) {
+                localStorage.setItem('token', token);
+                setIsLoggedIn(true);
+                if (projectId) {
+                    fetchEnvironments(projectId);
+                }
+            } else {
+                console.error('Failed to authenticate');
+                localStorage.removeItem('token');
+                handleLogout();
+            }
         }
-        // For demonstration purposes, let's assume the authentication is successful
     };
 
     const handleLogout = () => {
@@ -31,7 +35,7 @@ const Login = () => {
         return (
             <>
             <div>Welcome, {email}</div>
-            <button className="menu-button" onClick={handleLogout}>Logout</button>
+            <button className="button" onClick={handleLogout}>Logout</button>
             </>
         )
     } else {
@@ -41,16 +45,16 @@ const Login = () => {
                 <input
                     type="email"
                     placeholder="Email"
-                    value={email}
+                    value={email || ""}
                     onChange={(e) => setEmail(e.target.value)}
                 />
                 <input
                     type="password"
                     placeholder="Password"
-                    value={password}
+                    value={password || ""}
                     onChange={(e) => setPassword(e.target.value)}
                 />
-                <button className="menu-button" onClick={handleLogin}>Login</button>
+                <button className="button" onClick={handleLogin}>Login</button>
             </div>
         );
     }

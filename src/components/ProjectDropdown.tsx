@@ -1,33 +1,22 @@
 "use strict"
 import { useEffect, useState } from 'react';
-import axios from 'axios';
 import { Project } from '../models/Project';
 import { Branch } from '../models/Branch';
-import { Environment } from '../models/Environment';
 import { Config } from '../models/Config';
-import { fetchProjects } from '../services/RequestManager';
+import { fetchProjects, fetchBranches, fetchConfigs } from '../services/RequestManager';
+import { useStore } from '../store';
 
-type ProjectDropdownProps = {
-    project: Project | null;
-    branch: Branch | null;
-    environment: Environment | null;
-    config: Config | null;
-};
-
-// { project, branch, environment, config }
-const ProjectDropdown: React.FC<ProjectDropdownProps> = () => {
+const ProjectDropdown: React.FC = () => {
+    const { project, setProject, branch, setBranch } = useStore();
     const [projects, setProjects] = useState<Project[]>([]);
-    const [selectedProject, setSelectedProject] = useState<Project>();
     const [branches, setBranches] = useState<Branch[]>([]);
-    const [selectedBranch, setSelectedBranch] = useState<Branch>();
-    // const [environments, setEnvironments] = useState<Environment[]>([]);
-    // const [selectedEnvironment, setSelectedEnvironment] = useState<Environment>();
     const [configs, setConfigs] = useState<Config[]>([]);
-    // const [selectedConfig, setSelectedConfig] = useState<Config>();
 
     useEffect(() => {
         const fetchData = async () => {
-            setProjects(await fetchProjects());
+            const result = await fetchProjects();
+            console.log('projects results ' + result);
+            setProjects(result);
         };
         fetchData();
     }, []);
@@ -37,53 +26,32 @@ const ProjectDropdown: React.FC<ProjectDropdownProps> = () => {
     }, [projects]); 
 
     useEffect(() => {
-        // Fetch branches when selected project changes
-        if (selectedProject) {
-            fetchBranches();
+        if (project) {
+            const fetchData = async () => {
+                const result = await fetchBranches(project.id)
+                console.log('branch results ' + result);
+                setBranches(result);
+            };
+            fetchData();
         }
-    }, [selectedProject]);
+    }, [project]);
 
     useEffect(() => {
-        // Fetch configs when selected branch changes
-        if (selectedBranch) {
-            fetchConfigs();
+        if (branch) {
+            const fetchData = async () => {
+                const result = await fetchConfigs(branch.id)
+                console.log('config results ' + result);
+                setConfigs(result);
+            };
+            fetchData();
         }
-    }, [selectedBranch]);
-
-    // const fetchProjects = async () => {
-    //     try {
-    //         const response = await axios.get(`${configServiceUrl}/api/projects/`);
-    //         const projects = response.data.map((data: any) => new Project(data));
-    //         setProjects(projects);
-    //     } catch (error) {
-    //         console.error('Failed to fetch projects:', error);
-    //     }
-    // };
-
-    const fetchBranches = async () => {
-        try {
-            const response = await axios.get(`${configServiceUrl}/api/branches/`);
-            const branches = response.data.map((data: any) => new Branch(data));
-            setBranches(branches);
-        } catch (error) {
-            console.error('Failed to fetch branches:', error);
-        }
-    };
-    const fetchConfigs = async () => {
-        try {
-            const response = await axios.get(`${configServiceUrl}/api/configs`);
-            const configs = response.data.map((data: any) => new Config(data));
-            setConfigs(configs);
-        } catch (error) {
-            console.error('Failed to fetch configs:', error);
-        }
-    };
+    }, [branch]);
 
     return (
         <div style={{ width: '100%' }}>
             <select
-                value={selectedProject?.id}
-                onChange={(e) => setSelectedProject(projects.find(project => project.id === e.target.value))}
+                value={project?.id}
+                onChange={(e) => setProject(projects.find(project => project.id === e.target.value))}
             >
                 <option value="">Select a project</option>
                 {projects.map((project: { id: string, name: string }) => (
@@ -92,10 +60,9 @@ const ProjectDropdown: React.FC<ProjectDropdownProps> = () => {
                     </option>
                 ))}
             </select>
-
             <select
-                value={selectedBranch?.id}
-                onChange={(e) => setSelectedBranch(branches.find(project => project.id === e.target.value))}
+                value={branch?.id}
+                onChange={(e) => setBranch(branches.find(project => project.id === e.target.value))}
             >
                 <option value="">Select a branch</option>
                 {branches.map((branch) => (
@@ -104,12 +71,6 @@ const ProjectDropdown: React.FC<ProjectDropdownProps> = () => {
                     </option>
                 ))}
             </select>
-
-            <ul>
-                {configs.map((config) => (
-                    <li key={config.id}>config_{config.id}</li>
-                ))}
-            </ul>
         </div>
     );
 };

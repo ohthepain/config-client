@@ -11,10 +11,14 @@
     "getschema": "cp ../shared-db/prisma/schema.prisma ./schemacopy.prisma && node convert-prisma-models.js schemacopy.prisma"
   },
   "dependencies": {
+    "@fortawesome/free-solid-svg-icons": "^6.5.2",
+    "@fortawesome/react-fontawesome": "^0.2.2",
     "axios": "^1.7.2",
     "dotenv": "^16.4.5",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "react-fontawesome": "^1.7.1",
+    "zustand": "^4.5.2"
   },
   "devDependencies": {
     "@types/node": "^20.12.13",
