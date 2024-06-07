@@ -46,5 +46,5 @@ console.log(`Generating models from schema: ${schemaPath}`);
 const modelNames = getModelNames(schemaPath);
 modelNames.forEach(modelName => {
     console.log(modelName);
-    generateModelClass(modelName, './schema.prisma', `./src/models/${modelName}.ts`);
+    generateModelClass(modelName, schemaPath, `./src/models/${modelName}.ts`);
 });

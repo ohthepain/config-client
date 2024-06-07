@@ -37,10 +37,34 @@ export const fetchProjects = async (): Promise<Project[]> => {
     return response.data;
 };
 
+export const saveProject = async (project: Project) => {
+    const id = project.id;
+    const p: Project = await axios.put(`${configServiceUrl}/api/projects`, project,
+        { headers: getHeaders() }
+    );
+    // Optimistic update
+    if (id) {
+        useStore.getState().updateProject(p);
+    } else {
+        useStore.getState().addProject(p);
+    }
+}
+
+export const deleteProject = async (project: Project) => {
+    const id = project.id;
+    console.log(`deleting project ${project.name}`);
+    await axios.delete(`${configServiceUrl}/api/projects?id=${project.id}`,
+        { headers: getHeaders() }
+    );
+    // Optimistic update
+    useStore.getState().deleteProject(id);
+}
+
 export const fetchBranches = async (projectId: string): Promise<Branch[]> => {
     const response = await axios.get(`${configServiceUrl}/api/branches?projectId=${projectId}`,
         { headers: getHeaders() }
     );
+    useStore.getState().setBranches(response.data);
     return response.data;
 };
 

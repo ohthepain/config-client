@@ -39,6 +39,8 @@ const EnvironmentForm: React.FC<EnvironmentFormProps> = ({
   const [clientDownloadKey, setClientDownloadKey] = useState(
     environment?.clientDownloadKey || ""
   );
+  const [awsRegion, setAwsRegion] = useState(environment?.awsRegion || "");
+  const [warningMessage, setWarningMessage] = useState(environment?.warningMessage || "");
   const [confirmDelete, setConfirmDelete] = useState(false);
 
   const handleDelete = async () => {
@@ -78,6 +80,8 @@ const EnvironmentForm: React.FC<EnvironmentFormProps> = ({
         clientDownloadBucket: clientDownloadBucket,
         clientDownloadKey: clientDownloadKey,
         downloadUrl: downloadUrl,
+        awsRegion: awsRegion,
+        warningMessage: warningMessage,
       });
 
       await saveEnvironment(environment);
@@ -159,7 +163,18 @@ const EnvironmentForm: React.FC<EnvironmentFormProps> = ({
         />
       </div>
       <div className="form-field">
-        <label htmlFor="clientDownloadBucket">Client Downsload Bucket:</label>
+        <label htmlFor="awsRegion">AWS Region:</label>
+        <input
+          id="awsRegion"
+          type="text"
+          value={awsRegion}
+          onChange={(e) => {
+            setAwsRegion(e.target.value);
+          }}
+        />
+      </div>
+      <div className="form-field">
+        <label htmlFor="clientDownloadBucket">Client Download Bucket:</label>
         <input
           id="clientDownloadBucket"
           type="text"
@@ -188,6 +203,17 @@ const EnvironmentForm: React.FC<EnvironmentFormProps> = ({
           value={downloadUrl}
           onChange={(e) => {
             setDownloadUrl(e.target.value);
+          }}
+        />
+      </div>
+      <label htmlFor="warningMessage">Modification Warning Message:</label>
+      <div className="form-field">
+        <input
+          id="warningMessage"
+          type="text"
+          value={warningMessage}
+          onChange={(e) => {
+            setWarningMessage(e.target.value);
           }}
         />
       </div>

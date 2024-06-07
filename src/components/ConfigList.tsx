@@ -26,7 +26,7 @@ const ConfigList: React.FC = () => {
   return (
     <div>
       <h1>Config List</h1>
-      {configs.map((config) => (
+      {configs.sort((a, b) => a.id > b.id ? -1 : 1).map((config) => (
         <ConfigEntry key={config.id} config={config} />
       ))}
     </div>
