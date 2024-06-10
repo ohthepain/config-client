@@ -24,8 +24,7 @@ const ConfigList: React.FC = () => {
     }, []);
 
   return (
-    <div>
-      <h1>Config List</h1>
+    <div className="flex flex-col basis-1/2 bg-red-300">
       {configs.sort((a, b) => a.id > b.id ? -1 : 1).map((config) => (
         <ConfigEntry key={config.id} config={config} />
       ))}

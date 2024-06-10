@@ -6,6 +6,15 @@
     "module": "ESNext",
     "skipLibCheck": true,
 
+    /* My settings */
+    "baseUrl": ".",
+    "paths": {
+      "services/*": ["src/services/*"],
+      "utils/*": ["src/utils/*"],
+      "models/*": ["src/models/*"],
+      "components/*": ["src/components/*"]
+    },
+
     /* Bundler mode */
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,

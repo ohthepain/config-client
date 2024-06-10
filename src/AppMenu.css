@@ -1,24 +1,3 @@
-
-.App-menu {
-    justify-content: flex-start;
-    /* display: grid; */
-    background-color: var(--island-bg-color);
-    /* grid-gap: 2rem; */
-    align-items: flex-start;
-    /* grid-template-columns: 1fr 2fr 1fr; */
-}
-
-.config-card {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    /* height: 4rem; */
-    border-radius: 6px;
-    background-color: aquamarine;
-    padding: 0.5rem;
-    margin: 0.5rem;
-}
-
 .environment-card {
     display: flex;
     flex-direction: column;
@@ -38,12 +17,6 @@
 }
 
 .ConfigEntry {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-}
-
-.ConfigDetails {
     flex: 1;
     display: flex;
     flex-direction: column;

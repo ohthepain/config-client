@@ -38,8 +38,8 @@ const EnvironmentList: React.FC = () => {
   };
 
   return (
-    <div className="stack-vertical">
-      <div className="stack-horizontal">
+    <div className="flex flex-col w-64">
+      <div className="flex flex-col">
         <h1>Environments</h1>
         <button onClick={handleEdit}>
           <FontAwesomeIcon icon={editing ? faClose : faPlus} />

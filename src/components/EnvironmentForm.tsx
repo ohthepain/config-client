@@ -40,7 +40,9 @@ const EnvironmentForm: React.FC<EnvironmentFormProps> = ({
     environment?.clientDownloadKey || ""
   );
   const [awsRegion, setAwsRegion] = useState(environment?.awsRegion || "");
-  const [warningMessage, setWarningMessage] = useState(environment?.warningMessage || "");
+  const [warningMessage, setWarningMessage] = useState(
+    environment?.warningMessage || ""
+  );
   const [confirmDelete, setConfirmDelete] = useState(false);
 
   const handleDelete = async () => {
@@ -97,23 +99,22 @@ const EnvironmentForm: React.FC<EnvironmentFormProps> = ({
   };
 
   const clearInputs = () => {
-    setName('');
+    setName("");
     setTimeTravelHours(0);
     setTimeTravelMinutes(0);
-    setNotificationUrl('');
-    setUploadLocation('');
-    setClientDownloadBucket('');
-    setClientDownloadKey('');
-    setDownloadUrl('');
+    setNotificationUrl("");
+    setUploadLocation("");
+    setClientDownloadBucket("");
+    setClientDownloadKey("");
+    setDownloadUrl("");
   };
 
   return (
-    <div className="environment-card">
+    <div className="m-4 flex flex-col h-96 p-4 w-full font-sans shadow-xl rounded-xl bg-slate-50 hover:bg-sky-50">
       <div className="stack-horizontal full-width">
         <h2>{environment ? "Edit Environment" : "New Environment"}</h2>
         {/* <button onClick={handleCancel}>Cancel</button> */}
-        <button onClick={handleSave}>Save</button>
-        <button onClick={handleDelete}>Delete</button>
+
         {confirmDelete && (
           <div>
             <p>Are you sure you want to delete this environment?</p>
@@ -123,7 +124,9 @@ const EnvironmentForm: React.FC<EnvironmentFormProps> = ({
         )}
       </div>
       <div className="form-field">
-        <label htmlFor="name" className="form-field-title">Name:</label>
+        <label htmlFor="name" className="form-field-title">
+          Name:
+        </label>
         <input
           id="name"
           type="text"
@@ -218,6 +221,20 @@ const EnvironmentForm: React.FC<EnvironmentFormProps> = ({
         />
       </div>
       {environment?.id && <div>id: {environment?.id}</div>}
+      <div className="flex flex-row flex-auto">
+        <button
+          className="flex place-content-center m-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded h-10"
+          onClick={handleSave}
+        >
+          Save
+        </button>
+        <button
+          className="flex place-content-center m-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded h-10"
+          onClick={handleDelete}
+        >
+          Delete
+        </button>
+      </div>
     </div>
   );
 };

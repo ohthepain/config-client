@@ -68,13 +68,14 @@ export const fetchBranches = async (projectId: string): Promise<Branch[]> => {
     return response.data;
 };
 
-export const fetchEnvironments = async (projectId: string) => {
+export const fetchEnvironments = async (projectId: string): Promise<Environment[]> => {
     console.log(`fetchEnvironments: project ${projectId}`);
     const response = await axios.get(`${configServiceUrl}/api/environments?projectId=${projectId}`,
         { headers: getHeaders() }
     );
+    console.log(`fetchEnvironments: received ${JSON.stringify(response.data)}`);
     useStore.getState().setEnvironments(response.data);
-    // return response.data;
+    return response.data;
 };
 
 export const saveEnvironment = async (environment: Environment) => {

@@ -1,29 +1,32 @@
-import "./index.css";
-import "./App.css";
-import "./AppMenu.css";
-import ProjectDropdown from "./components/ProjectDropdown";
 import Login from "./components/Login.tsx";
 import ConfigList from "./components/ConfigList";
-import ConfigDetails from "./components/ConfigDetails.tsx";
-import EnvironmentList from "./components/EnvironmentList.tsx";
+import { SideBar } from "./components/SideBar.tsx";
+import { useStore } from "./store";
+import EnvironmentForm from "./components/EnvironmentForm.tsx";
 
 function App() {
+  const { project, environment } = useStore();
   return (
-    <div className="ui-wrapper">
-      <div className="stack-vertical full-height full-width">
-        <div className="App-menu stack-horizontal">
-          <ProjectDropdown></ProjectDropdown>
+    <div className="flex-col bg-orange-500">
+      <div className="flex-row bg-slate-50 h-24 shadow-lg">
+        <div className="flex flex-row flex-auto bg-slate-50 h-24 shadow-lg rotate-0">
+          {/* <ProjectDropdown></ProjectDropdown> */}
           <Login></Login>
+          <div className="flex-col w-full bg-slate-50 flex items-center justify-center">
+            <div className=" text-center italic font-sans font-bold text-[3rem]">
+              {project?.name || "Select Project"}
+            </div>
+          </div>
         </div>
-        <div className="stack stack-horizontal full-width">
-          <div>
-            <EnvironmentList></EnvironmentList>
-          </div>
-          <div>
-            <ConfigList></ConfigList>
-          </div>
-          <div>
-            <ConfigDetails config={null}></ConfigDetails>
+      </div>
+      <div>
+        <div className="flex flex-row bg-slate-50 shadow-lg">
+          <SideBar></SideBar>
+          <ConfigList></ConfigList>
+          <div className="flex basis-1/3 flex-row shadow-lg bg-purple-300 h-screen">
+            {environment && (
+            <EnvironmentForm environment={undefined} onSave={() => {}}></EnvironmentForm>
+            )}
           </div>
         </div>
       </div>

@@ -1,20 +1,15 @@
-import { useState } from 'react';
-
 import { authenticate } from '../services/RequestManager';
 import { useStore } from '../store';
-import '../AppMenu.css';
 import { fetchEnvironments } from '../services/RequestManager';
 
 const Login = () => {
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
-    const { email, setEmail, password, setPassword, projectId } = useStore();
+    const { token, setToken, email, setEmail, password, setPassword, projectId } = useStore();
 
     const handleLogin = async () => {
         if (email && password) {
             const token: string | null = await authenticate(email, password);
             if (token) {
-                localStorage.setItem('token', token);
-                setIsLoggedIn(true);
+                setToken(token);
                 if (projectId) {
                     fetchEnvironments(projectId);
                 }
@@ -27,22 +22,24 @@ const Login = () => {
     };
 
     const handleLogout = () => {
-        localStorage.removeItem('token');
-        setIsLoggedIn(false);
+        setToken(null);
     };
 
-    if (isLoggedIn) {
+    if (token) {
         return (
-            <>
-            <div>Welcome, {email}</div>
-            <button className="button" onClick={handleLogout}>Logout</button>
-            </>
+            <div className='flex-col w-64 bg-slate-50'>
+                <div className='flex place-content-center m-2'>{email}</div>
+                <div className='flex place-content-center m-2'>
+                    <button className="flex place-content-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded h-10" onClick={handleLogout}>Logout</button>
+                </div>
+            </div>
         )
     } else {
         // User is not logged in, show email and password fields
         return (
-            <div>
+            <div className='flex-col w-64 bg-slate-50'>
                 <input
+                    className='flex place-content-center m-2'
                     type="email"
                     placeholder="Email"
                     value={email || ""}
@@ -50,11 +47,12 @@ const Login = () => {
                 />
                 <input
                     type="password"
+                    className='flex place-content-center m-2'
                     placeholder="Password"
                     value={password || ""}
                     onChange={(e) => setPassword(e.target.value)}
                 />
-                <button className="button" onClick={handleLogin}>Login</button>
+                <button className="flex place-content-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded h-10" onClick={handleLogin}>Login</button>
             </div>
         );
     }

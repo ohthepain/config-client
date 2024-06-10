@@ -5,17 +5,17 @@ import BranchEntry from './BranchEntry';
 import { useStore } from '../store';
 
 const BranchList: React.FC = () => {
-  const [branchs, setBranchs] = useState<Branch[]>([]);
+  const [branches, setBranches] = useState<Branch[]>([]);
   const { branch } = useStore();
 
   useEffect(() => {
         const fetchData = async () => {
             try {
-                var fetchedBranchs: Branch[] = [];
+                var fetchedBranches: Branch[] = [];
                 if (branch) {
-                    fetchedBranchs = await fetchBranches(branch.id);
+                    fetchedBranches = await fetchBranches(branch.id);
                 }
-                setBranchs(fetchedBranchs);
+                setBranches(fetchedBranches);
             } catch (error) {
                 console.error('Error fetching branchs:', error);
             }
@@ -26,7 +26,7 @@ const BranchList: React.FC = () => {
   return (
     <div>
       <h1>Branch List</h1>
-      {branchs.map((branch) => (
+      {branches.map((branch) => (
         <BranchEntry key={branch.id} branch={branch} />
       ))}
     </div>

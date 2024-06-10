@@ -1,4 +1,3 @@
-"use strict";
 import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -65,58 +64,59 @@ const ProjectDropdown: React.FC = () => {
   }, [branch]);
 
   return (
-    <div style={{ width: "100%" }}>
+    <div className="flex">
+      <div>
+        <select
+          value={project?.id}
+          onChange={(e) => {
+            setProject(
+              projects.find((project) => project.id === e.target.value)
+            );
+            fetchEnvironments(e.target.value);
+          }}
+        >
+          <option value="">Select a project</option>
+          {projects.map((project: { id: string; name: string }) => (
+            <option key={project.id} value={project.id}>
+              {project.name}
+            </option>
+          ))}
+        </select>
+        <select
+          value={branch?.id}
+          onChange={(e) => {
+            setBranch(
+              branches.find((project) => project.id === e.target.value)
+            );
+          }}
+        >
+          <option value="">Select a branch</option>
+          {branches.map((branch) => (
+            <option key={branch.id} value={branch.id}>
+              {branch.name}
+            </option>
+          ))}
+        </select>
+      </div>
+      <div>
+        <button
+          onClick={() => {
+            setEditing(!editing);
+          }}
+        >
+          <FontAwesomeIcon icon={editing ? faChevronDown : faChevronRight} />
+        </button>
+
         <div className="stack-horizontal">
-            <div>
-      <select
-        value={project?.id}
-        onChange={(e) => {
-          setProject(projects.find((project) => project.id === e.target.value));
-          fetchEnvironments(e.target.value);
-        }}
-      >
-        <option value="">Select a project</option>
-        {projects.map((project: { id: string; name: string }) => (
-          <option key={project.id} value={project.id}>
-            {project.name}
-          </option>
-        ))}
-      </select>
-      <select
-        value={branch?.id}
-        onChange={(e) => {
-          setBranch(branches.find((project) => project.id === e.target.value));
-        }}
-      >
-        <option value="">Select a branch</option>
-        {branches.map((branch) => (
-          <option key={branch.id} value={branch.id}>
-            {branch.name}
-          </option>
-        ))}
-      </select>
-
-      </div>
-        <div>
-      <button
-        onClick={() => {
-          setEditing(!editing);
-        }}
-      >
-        <FontAwesomeIcon icon={editing ? faChevronDown : faChevronRight} />
-      </button>
-
-      <div className="stack-horizontal">
-        {project && editing && (
-          <ProjectForm
-            project={project}
-            onSave={() => console.log("Project saved")}
-            onDelete={() => console.log("Project deleted")}
-          />
-        )}
-        {editing && <AccountForm />}
+          {project && editing && (
+            <ProjectForm
+              project={project}
+              onSave={() => console.log("Project saved")}
+              onDelete={() => console.log("Project deleted")}
+            />
+          )}
+          {editing && <AccountForm />}
         </div>
-      </div>
       </div>
     </div>
   );

@@ -7,11 +7,13 @@ import { Config } from './models/Config';
 
 interface StoreState {
     // subscribe: (listener: any) => any;
+    token: string | null;
     email: string | null;
     password: string | null;
     githubAccount: string | null;
     githubAccessToken: string | null;
     projectId: string | null;
+    // idk if this is a good idea - maybe use a getter instead?
     project: Project | null;
     projects: Project[];
     branchId: string | null;
@@ -22,6 +24,7 @@ interface StoreState {
     environments: Environment[];
     configId: string | null;
     config: Config | null;
+    setToken: (token: string | null) => void;
     setEmail: (email: string) => void;
     setPassword: (password: string) => void;
     setGithubAccount: (account: string | null) => void;
@@ -59,6 +62,7 @@ export const useStore = create<StoreState>()(
             //     );
             //     return unsubscribe;
             //   },
+            token: null,
             email: null,
             githubAccount: null,
             githubAccessToken: null,
@@ -74,6 +78,7 @@ export const useStore = create<StoreState>()(
             branch: null,
             branches: [],
             config: null,
+            setToken: (token: string | null) => set(() => ({ token: token })),
             setGithubAccount: (account: string | null) => set(() => ({ githubAccount: account })),
             setGithubAccessToken: (token: string | null) => set(() => ({ githubAccessToken: token })),
             setEmail: (email: string) => set(() => ({ email: email })),
