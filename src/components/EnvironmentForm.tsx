@@ -1,49 +1,24 @@
-"use strict";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Environment } from "../models/Environment";
 import { saveEnvironment, deleteEnvironment } from "../services/RequestManager";
 import { useStore } from "../store";
 
 interface EnvironmentFormProps {
-  environment?: Environment;
+  environment: Environment;
   onSave?: (environment: Environment) => void | undefined;
   onDelete?: (environment: Environment) => void | undefined;
 }
 
-const EnvironmentForm: React.FC<EnvironmentFormProps> = ({
-  environment,
-  onSave,
-  onDelete,
-}) => {
+const EnvironmentForm: React.FC<EnvironmentFormProps> = (props) => {
+  console.log(`EnvironmentForm: render ${props.environment.name}`);
+  const [environment, setEnvironment] = useState<Environment>(props.environment);
   const { project } = useStore();
-  const [id] = useState(environment?.id);
-  const [name, setName] = useState(environment?.name || "");
-  const [timeTravelHours, setTimeTravelHours] = useState<number>(
-    environment?.globalTimeTravel || 0
-  );
-  const [timeTravelMinutes, setTimeTravelMinutes] = useState<number>(
-    environment?.globalTimeTravel || 0
-  );
-  const [notificationUrl, setNotificationUrl] = useState(
-    environment?.notificationUrl || ""
-  );
-  const [uploadLocation, setUploadLocation] = useState(
-    environment?.uploadLocation || ""
-  );
-  const [downloadUrl, setDownloadUrl] = useState(
-    environment?.downloadUrl || ""
-  );
-  const [clientDownloadBucket, setClientDownloadBucket] = useState(
-    environment?.clientDownloadBucket || ""
-  );
-  const [clientDownloadKey, setClientDownloadKey] = useState(
-    environment?.clientDownloadKey || ""
-  );
-  const [awsRegion, setAwsRegion] = useState(environment?.awsRegion || "");
-  const [warningMessage, setWarningMessage] = useState(
-    environment?.warningMessage || ""
-  );
   const [confirmDelete, setConfirmDelete] = useState(false);
+
+  useEffect(() => {
+    console.log(`useEffect: setEnvironment ${props.environment.name}`);
+    setEnvironment(props.environment);
+  }, [props.environment]);
 
   const handleDelete = async () => {
     if (environment) {
@@ -55,8 +30,8 @@ const EnvironmentForm: React.FC<EnvironmentFormProps> = ({
     if (environment?.id) {
       try {
         await deleteEnvironment(environment);
-        if (onDelete) {
-          onDelete(environment);
+        if (props.onDelete) {
+          props.onDelete(environment);
         }
       } catch (error) {
         console.error("Error deleting environment:", error);
@@ -72,26 +47,12 @@ const EnvironmentForm: React.FC<EnvironmentFormProps> = ({
   const handleSave = async () => {
     console.log(`handleSave ${project ? project.id : "null"}`);
     try {
-      const environment: Environment = new Environment({
-        id: id,
-        name: name,
-        projectId: project?.id,
-        globalTimeTravel: timeTravelHours * 60 + timeTravelMinutes,
-        notificationUrl: notificationUrl,
-        uploadLocation: uploadLocation,
-        clientDownloadBucket: clientDownloadBucket,
-        clientDownloadKey: clientDownloadKey,
-        downloadUrl: downloadUrl,
-        awsRegion: awsRegion,
-        warningMessage: warningMessage,
-      });
-
-      await saveEnvironment(environment);
+      await saveEnvironment(environment!);
 
       clearInputs();
 
-      if (onSave) {
-        onSave(environment);
+      if (props.onSave) {
+        props.onSave(environment!);
       }
     } catch (error) {
       console.error("Error saving environment:", error);
@@ -99,19 +60,26 @@ const EnvironmentForm: React.FC<EnvironmentFormProps> = ({
   };
 
   const clearInputs = () => {
-    setName("");
-    setTimeTravelHours(0);
-    setTimeTravelMinutes(0);
-    setNotificationUrl("");
-    setUploadLocation("");
-    setClientDownloadBucket("");
-    setClientDownloadKey("");
-    setDownloadUrl("");
+    const newEnvironment: Environment = new Environment({
+        id: undefined,
+        name: "(New Environment)",
+        projectId: project?.id,
+        globalTimeTravel: 0,
+        notificationUrl: environment.notificationUrl,
+        uploadLocation: environment.uploadLocation,
+        clientDownloadBucket: environment.clientDownloadBucket,
+        clientDownloadKey: environment.clientDownloadKey,
+        downloadUrl: environment.downloadUrl,
+        awsRegion: environment.awsRegion,
+        warningMessage: environment.warningMessage,
+    });
+
+    setEnvironment(newEnvironment);
   };
 
   return (
-    <div className="m-4 flex flex-col h-96 p-4 w-full font-sans shadow-xl rounded-xl bg-slate-50 hover:bg-sky-50">
-      <div className="stack-horizontal full-width">
+    <div className="m-4 flex flex-col shrink p-4 w-full font-sans shadow-xl rounded-xl bg-slate-50 hover:bg-sky-50">
+      <div className="flex full-width">
         <h2>{environment ? "Edit Environment" : "New Environment"}</h2>
         {/* <button onClick={handleCancel}>Cancel</button> */}
 
@@ -123,101 +91,67 @@ const EnvironmentForm: React.FC<EnvironmentFormProps> = ({
           </div>
         )}
       </div>
-      <div className="form-field">
-        <label htmlFor="name" className="form-field-title">
-          Name:
-        </label>
+      <div className="flex">
+        <label htmlFor="name" className="flex-title">Name:</label>
         <input
           id="name"
           type="text"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
+          value={environment.name || ""}
+          onChange={(e) => setEnvironment({...environment, name: e.target.value})}
         />
       </div>
-      {/* <div className="form-field">
-        <label htmlFor="Time Travel Hours">Time Travel (hours):</label>
-        <input
-          id="timeTravelHours"
-          type="number"
-          value={timeTravelHours}
-          onChange={(e) => {
-            setTimeTravelHours(e.target.value);
-          }}
-        />
-        <label htmlFor="Time Travel Minutes">(minutes):</label>
-        <input
-          id="timeTravelMinutes"
-          type="number"
-          value={timeTravelMinutes}
-          onChange={(e) => {
-            setTimeTravelMinutes(e.target.value);
-          }}
-        />
-      </div> */}
-      <div className="form-field">
+      <div className="flex">
         <label htmlFor="notificationUrl">Upload Location:</label>
         <input
           id="notificationUrl"
           type="text"
-          value={notificationUrl}
-          onChange={(e) => {
-            setNotificationUrl(e.target.value);
-          }}
+          value={environment.notificationUrl}
+          onChange={(e) => {setEnvironment({...environment, notificationUrl: e.target.value})}}
         />
       </div>
-      <div className="form-field">
+      <div className="flex">
         <label htmlFor="awsRegion">AWS Region:</label>
         <input
           id="awsRegion"
           type="text"
-          value={awsRegion}
-          onChange={(e) => {
-            setAwsRegion(e.target.value);
-          }}
+          value={environment.awsRegion}
+          onChange={(e) => {setEnvironment({...environment, awsRegion: e.target.value})}}
         />
       </div>
-      <div className="form-field">
+      <div className="flex">
         <label htmlFor="clientDownloadBucket">Client Download Bucket:</label>
         <input
           id="clientDownloadBucket"
           type="text"
-          value={clientDownloadBucket}
-          onChange={(e) => {
-            setClientDownloadBucket(e.target.value);
-          }}
+          value={environment.clientDownloadBucket}
+          onChange={(e) => {setEnvironment({...environment, clientDownloadBucket: e.target.value})}}
         />
       </div>
-      <div className="form-field">
+      <div className="flex">
         <label htmlFor="clientDownloadKey">Client Download Key:</label>
         <input
           id="clientDownloadKey"
           type="text"
-          value={clientDownloadKey}
-          onChange={(e) => {
-            setClientDownloadKey(e.target.value);
-          }}
+          value={environment.clientDownloadKey}
+          onChange={(e) => {setEnvironment({...environment, clientDownloadKey: e.target.value})}}
         />
       </div>
-      <div className="form-field">
+      <div className="flex">
         <label htmlFor="downloadUrl">Download URL:</label>
         <input
           id="downloadUrl"
           type="text"
-          value={downloadUrl}
-          onChange={(e) => {
-            setDownloadUrl(e.target.value);
-          }}
+          value={environment.downloadUrl}
+          onChange={(e) => {setEnvironment({...environment, downloadUrl: e.target.value})}}
         />
       </div>
       <label htmlFor="warningMessage">Modification Warning Message:</label>
-      <div className="form-field">
+      <div className="flex">
         <input
           id="warningMessage"
           type="text"
-          value={warningMessage}
-          onChange={(e) => {
-            setWarningMessage(e.target.value);
-          }}
+          value={environment.warningMessage}
+          onChange={(e) => {setEnvironment({...environment, warningMessage: e.target.value})}}
         />
       </div>
       {environment?.id && <div>id: {environment?.id}</div>}

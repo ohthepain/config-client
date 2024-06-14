@@ -3,8 +3,6 @@ import { useStore } from '../store';
 import { GitRepo } from '../models/GitRepo';
 
 export async function getRepositoriesForAccount(githubAccount: string, githubAccessToken: string): Promise<GitRepo[]> {
-    //  string = "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"
-
     const octokit = new Octokit({
     auth: githubAccessToken,
   });

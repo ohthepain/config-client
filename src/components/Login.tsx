@@ -1,17 +1,18 @@
 import { authenticate } from '../services/RequestManager';
 import { useStore } from '../store';
 import { fetchEnvironments } from '../services/RequestManager';
+import { isTokenExpired } from '../services/TokenUtils';
 
 const Login = () => {
-    const { token, setToken, email, setEmail, password, setPassword, projectId } = useStore();
+    const { token, setToken, email, setEmail, password, setPassword, project } = useStore();
 
     const handleLogin = async () => {
         if (email && password) {
             const token: string | null = await authenticate(email, password);
             if (token) {
                 setToken(token);
-                if (projectId) {
-                    fetchEnvironments(projectId);
+                if (project) {
+                    fetchEnvironments(project.id);
                 }
             } else {
                 console.error('Failed to authenticate');
@@ -25,7 +26,7 @@ const Login = () => {
         setToken(null);
     };
 
-    if (token) {
+    if (token && !isTokenExpired(token)) {
         return (
             <div className='flex-col w-64 bg-slate-50'>
                 <div className='flex place-content-center m-2'>{email}</div>

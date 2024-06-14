@@ -10,7 +10,7 @@ import { useStore } from '../store';
 const configServiceUrl = import.meta.env.VITE_CONFIG_SERVICE_URL
 
 const getHeaders = () => {
-    const adminToken: string | null = localStorage.getItem('token');
+    const adminToken: string | null = useStore.getState().token;
     return {
         "Content-Type": "application/json",
         "Authorization": `Bearer ${adminToken}`
@@ -60,6 +60,29 @@ export const deleteProject = async (project: Project) => {
     useStore.getState().deleteProject(id);
 }
 
+export const saveBranch = async (branch: Branch) => {
+    const id = branch.id;
+    const p: Project = await axios.put(`${configServiceUrl}/api/branches`, branch,
+        { headers: getHeaders() }
+    );
+    // Optimistic update
+    if (id) {
+        useStore.getState().updateBranch(p);
+    } else {
+        useStore.getState().addBranch(p);
+    }
+}
+
+export const deleteBranch = async (branch: Branch) => {
+    const id = branch.id;
+    console.log(`deleting branch ${branch.name}`);
+    await axios.delete(`${configServiceUrl}/api/branches?id=${branch.id}`,
+        { headers: getHeaders() }
+    );
+    // Optimistic update
+    useStore.getState().deleteBranch(id);
+}
+
 export const fetchBranches = async (projectId: string): Promise<Branch[]> => {
     const response = await axios.get(`${configServiceUrl}/api/branches?projectId=${projectId}`,
         { headers: getHeaders() }
@@ -69,11 +92,11 @@ export const fetchBranches = async (projectId: string): Promise<Branch[]> => {
 };
 
 export const fetchEnvironments = async (projectId: string): Promise<Environment[]> => {
-    console.log(`fetchEnvironments: project ${projectId}`);
+    // console.log(`fetchEnvironments: project ${projectId}`);
     const response = await axios.get(`${configServiceUrl}/api/environments?projectId=${projectId}`,
         { headers: getHeaders() }
     );
-    console.log(`fetchEnvironments: received ${JSON.stringify(response.data)}`);
+    // console.log(`fetchEnvironments: received ${JSON.stringify(response.data)}`);
     useStore.getState().setEnvironments(response.data);
     return response.data;
 };
@@ -102,7 +125,7 @@ export const deleteEnvironment = async (environment: Environment) => {
 };
 
 export const fetchConfigs = async (branchId: string): Promise<Config[]> => {
-    const response = await axios.get(`${configServiceUrl}/api/configs?${branchId}`,
+    const response = await axios.get(`${configServiceUrl}/api/configs?branchId=${branchId}`,
         { headers: getHeaders() }
     );
     return response.data;

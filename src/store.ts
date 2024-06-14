@@ -12,12 +12,13 @@ interface StoreState {
     password: string | null;
     githubAccount: string | null;
     githubAccessToken: string | null;
-    projectId: string | null;
+    // projectId: string | null;
     // idk if this is a good idea - maybe use a getter instead?
     project: Project | null;
+    editProject: boolean;
     projects: Project[];
     branchId: string | null;
-    environmentId: string | null;
+    // environmentId: string | null;
     branch: Branch | null;
     branches: Branch[];
     environment: Environment | undefined;
@@ -29,14 +30,15 @@ interface StoreState {
     setPassword: (password: string) => void;
     setGithubAccount: (account: string | null) => void;
     setGithubAccessToken: (token: string | null) => void;
-    setEnvironmentId: (environmentId: string | null) => void;
+    // setEnvironmentId: (environmentId: string | null) => void;
     setEnvironment: (environment: Environment | undefined) => void;
     setEnvironments: (environments: Environment[]) => void;
     addEnvironment: (environment: Environment) => void;
     updateEnvironment: (environment: Environment) => void;
     deleteEnvironment: (environmentId: string) => void;
-    setProjectId: (projectId: string | null) => void;
+    // setProjectId: (projectId: string | null) => void;
     setProject: (project: Project | undefined) => void;
+    setEditProject: (editProject: boolean) => void;
     setProjects: (projects: Project[]) => void;
     addProject: (project: Project) => void;
     updateProject: (project: Project) => void;
@@ -67,12 +69,13 @@ export const useStore = create<StoreState>()(
             githubAccount: null,
             githubAccessToken: null,
             password: null,
-            environmentId: null,
+            // environmentId: null,
             environment: undefined,
             environments: [],
-            projectId: null,
+            // projectId: null,
             configId: null,
             project: null,
+            editProject: false,
             projects: [],
             branchId: null,
             branch: null,
@@ -83,9 +86,9 @@ export const useStore = create<StoreState>()(
             setGithubAccessToken: (token: string | null) => set(() => ({ githubAccessToken: token })),
             setEmail: (email: string) => set(() => ({ email: email })),
             setPassword: (password: string) => set(() => ({ password: password })),
-            setEnvironment: (environment: Environment | undefined) => set(() => ({ environment: environment })),
-            setProjectId: (projectId: string | null) => set(() => ({ projectId : projectId })),
+            // setProjectId: (projectId: string | null) => set((state) => ({ projectId : projectId, project: state.projects.find(p => p.id === projectId)})),
             setProject: (project: Project | undefined) => set(() => ({ project: project })),
+            setEditProject: (editProject: boolean) => set(() => ({ editProject: editProject })),
             setProjects: (projects: Project[]) => set(() => ({ projects: projects })),
             addProject: (project: Project) => set((state) => ({ projects: [...state.projects, project] })),
             updateProject: (project: Project) => set((state) => ({ projects: state.projects.map(p => p.id === project.id ? project : p) })),
@@ -96,7 +99,8 @@ export const useStore = create<StoreState>()(
             addBranch: (branch: Branch) => set((state) => ({ branches: [...state.branches, branch] })),
             updateBranch: (branch: Branch) => set((state) => ({ branches: state.branches.map(b => b.id === branch.id ? branch : b) })),
             deleteBranch: (id: string) => set((state) => ({ branches: state.branches.filter(branch => branch.id !== id) })),
-            setEnvironmentId: (environmentId: string | null) => set(() => ({ environmentId: environmentId })),
+            // setEnvironmentId: (environmentId: string | null) => set((state) => ({ environmentId: environmentId, environment: state.environments.find(e => {e.id == environmentId}) })),
+            setEnvironment: (environment: Environment | undefined) => { console.log('setEnvironment'); set(() => ({ environment: environment }))},
             setEnvironments: (environments: Environment[]) => set(() => ({ environments: environments })),
             updateEnvironment: (environment: Environment) => set((state) => ({ environments: state.environments.map(e => e.id === environment.id ? environment : e) })),
             addEnvironment: (environment: Environment) => set((state) => ({ environments: [...state.environments, environment] })),
