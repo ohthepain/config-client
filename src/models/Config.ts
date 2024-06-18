@@ -1,8 +1,6 @@
-import { ConfigStatus } from "./ConfigStatus";
-
 export class Config {
   id: any;
-  status: ConfigStatus;
+  status: any;
   projectId: any;
   branch: any;
   branchId: any;

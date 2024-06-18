@@ -18,8 +18,7 @@ const ConfigEntry: React.FC<ConfigDisplayProps> = ({ config }) => {
       <form className="flex-auto">
         <div className="bg-slate-300 p-4">
         <h3>
-          Config {config.id} Branch:{" "}
-          {config.branch ? config.branch.name : "None"}
+            {`Config ${config.id} (${config.branch ? config.branch.gitBranch : "none"})`}
         </h3>
         </div>
         <div className="p-6">
@@ -27,7 +26,7 @@ const ConfigEntry: React.FC<ConfigDisplayProps> = ({ config }) => {
         <div>Status: {config.status}</div>
         <ConfigStatusMonitor status={config.status} />
         </div>
-        <div>Branch: {config.branch ? config.branch.name : "None"}</div>
+        <div>Branch: {config.branch ? config.branch.gitBranch : "None"}</div>
         <div>Notes: {config.notes}</div>
         <div>Hash: {config.gitHash}</div>
         <p>

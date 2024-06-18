@@ -1,11 +1,10 @@
 import { Octokit } from '@octokit/rest';
-import { useStore } from '../store';
 import { GitRepo } from '../models/GitRepo';
+import { GitBranch } from '../models/GitBranch';
 
 export async function getRepositoriesForAccount(githubAccount: string, githubAccessToken: string): Promise<GitRepo[]> {
-    const octokit = new Octokit({
-    auth: githubAccessToken,
-  });
+    
+  const octokit = new Octokit({ auth: githubAccessToken });
 
   try {
     const response = await octokit.rest.repos.listForUser({
@@ -26,18 +25,43 @@ export async function getRepositoriesForAccount(githubAccount: string, githubAcc
   }
 }
 
-export async function test() {
-    // Usage example
-    const githubAccount = useStore.getState().githubAccount;
-    const githubAccessToken = useStore.getState().githubAccessToken;
+export async function getBranchesForRepo(githubAccount: string, githubAccessToken: string, gitRepo: string): Promise<GitBranch[]> {
 
-    getRepositoriesForAccount(githubAccount!, githubAccessToken!)
-    .then((repositories: GitRepo[]) => {
-        for (let repo of repositories) {
-            console.log(`${JSON.stringify(repo)}\n`);
-        }
-    })
-    .catch((error) => {
-        console.error("Error:", error);
-    });
+  const octokit = new Octokit({ auth: githubAccessToken });
+
+  console.log(`getBranchesForRepo ${githubAccount} / ${gitRepo}`);
+
+  try {
+    let _branches: any[] = [];
+    let page = 1;
+    let perPage = 100;
+    const owner = githubAccount;
+
+    while (true) {
+      const response = await octokit.rest.repos.listBranches({
+        perPage: perPage,
+        page: page,
+        owner: owner,
+        repo: gitRepo
+      });
+
+      _branches = _branches.concat(response.data);
+
+      if (response.data.length < perPage) {
+        break;
+      }
+
+      page++;
+    }
+
+    let branches: GitBranch[] = [];
+    for (let branch of _branches) {
+      branches.push(new GitBranch(branch));
+    }
+
+    return branches;
+  } catch (error) {
+    console.error("Error fetching branches:", error);
+    throw error;
+  }
 }

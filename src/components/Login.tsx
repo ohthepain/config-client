@@ -4,7 +4,7 @@ import { fetchEnvironments } from '../services/RequestManager';
 import { isTokenExpired } from '../services/TokenUtils';
 
 const Login = () => {
-    const { token, setToken, email, setEmail, password, setPassword, project } = useStore();
+    const { token, setToken, email, setEmail, password, setPassword, project, editAccount, setEditAccount } = useStore();
 
     const handleLogin = async () => {
         if (email && password) {
@@ -29,7 +29,9 @@ const Login = () => {
     if (token && !isTokenExpired(token)) {
         return (
             <div className='flex-col w-64 bg-slate-50'>
-                <div className='flex place-content-center m-2'>{email}</div>
+                <div className='flex place-content-center m-2' onClick={() => {setEditAccount(!editAccount); console.log('editAccount', editAccount)}}>
+                    {email}
+                </div>
                 <div className='flex place-content-center m-2'>
                     <button className="flex place-content-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded h-10" onClick={handleLogout}>Logout</button>
                 </div>

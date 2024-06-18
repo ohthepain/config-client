@@ -40,6 +40,8 @@
     "fs": "^0.0.1-security",
     "hast-util-sanitize": "^5.0.1",
     "postcss": "^8.4.38",
+    "prettier": "3.3.2",
+    "prettier-plugin-tailwindcss": "^0.6.5",
     "typescript": "^5.2.2",
     "vite": "^5.2.0"
   }

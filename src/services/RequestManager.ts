@@ -1,6 +1,4 @@
-"use strict";
-
-import axios from 'axios';
+import axiosInstance from './AxiosInterceptor';
 import { Project } from '../models/Project';
 import { Branch } from '../models/Branch';
 import { Environment } from '../models/Environment';
@@ -19,7 +17,7 @@ const getHeaders = () => {
 
 export const authenticate = async (email: string, password: string): Promise<string | null> => {
     try {
-        const response = await axios.post(`${configServiceUrl}/api/auth`, 
+        const response = await axiosInstance.post(`${configServiceUrl}/api/auth`, 
             { "email": email, "password": password }, 
             { headers: { "Content-Type": "application/json"} }
         );
@@ -31,7 +29,7 @@ export const authenticate = async (email: string, password: string): Promise<str
 };
 
 export const fetchProjects = async (): Promise<Project[]> => {
-    const response = await axios.get(`${configServiceUrl}/api/projects/`,
+    const response = await axiosInstance.get(`${configServiceUrl}/api/projects/`,
         { headers: getHeaders() }
     );
     return response.data;
@@ -39,7 +37,7 @@ export const fetchProjects = async (): Promise<Project[]> => {
 
 export const saveProject = async (project: Project) => {
     const id = project.id;
-    const p: Project = await axios.put(`${configServiceUrl}/api/projects`, project,
+    const p: Project = await axiosInstance.put(`${configServiceUrl}/api/projects`, project,
         { headers: getHeaders() }
     );
     // Optimistic update
@@ -53,7 +51,7 @@ export const saveProject = async (project: Project) => {
 export const deleteProject = async (project: Project) => {
     const id = project.id;
     console.log(`deleting project ${project.name}`);
-    await axios.delete(`${configServiceUrl}/api/projects?id=${project.id}`,
+    await axiosInstance.delete(`${configServiceUrl}/api/projects?id=${project.id}`,
         { headers: getHeaders() }
     );
     // Optimistic update
@@ -61,22 +59,24 @@ export const deleteProject = async (project: Project) => {
 }
 
 export const saveBranch = async (branch: Branch) => {
+    console.log(`saving branch ${branch.gitBranch} - ${JSON.stringify(branch)}`);
     const id = branch.id;
-    const p: Project = await axios.put(`${configServiceUrl}/api/branches`, branch,
+    const _branch: Branch = await axiosInstance.put(`${configServiceUrl}/api/branches`, branch,
         { headers: getHeaders() }
     );
+    console.log(`saving branch ${branch.gitBranch} DUNN`);
     // Optimistic update
     if (id) {
-        useStore.getState().updateBranch(p);
+        useStore.getState().updateBranch(_branch);
     } else {
-        useStore.getState().addBranch(p);
+        useStore.getState().addBranch(_branch);
     }
 }
 
 export const deleteBranch = async (branch: Branch) => {
     const id = branch.id;
-    console.log(`deleting branch ${branch.name}`);
-    await axios.delete(`${configServiceUrl}/api/branches?id=${branch.id}`,
+    console.log(`deleting branch ${branch.gitBranch}`);
+    await axiosInstance.delete(`${configServiceUrl}/api/branches?id=${branch.id}`,
         { headers: getHeaders() }
     );
     // Optimistic update
@@ -84,7 +84,8 @@ export const deleteBranch = async (branch: Branch) => {
 }
 
 export const fetchBranches = async (projectId: string): Promise<Branch[]> => {
-    const response = await axios.get(`${configServiceUrl}/api/branches?projectId=${projectId}`,
+    console.log(`fetchBranches: project ${projectId}`);
+    const response = await axiosInstance.get(`${configServiceUrl}/api/branches?projectId=${projectId}`,
         { headers: getHeaders() }
     );
     useStore.getState().setBranches(response.data);
@@ -93,7 +94,7 @@ export const fetchBranches = async (projectId: string): Promise<Branch[]> => {
 
 export const fetchEnvironments = async (projectId: string): Promise<Environment[]> => {
     // console.log(`fetchEnvironments: project ${projectId}`);
-    const response = await axios.get(`${configServiceUrl}/api/environments?projectId=${projectId}`,
+    const response = await axiosInstance.get(`${configServiceUrl}/api/environments?projectId=${projectId}`,
         { headers: getHeaders() }
     );
     // console.log(`fetchEnvironments: received ${JSON.stringify(response.data)}`);
@@ -103,7 +104,7 @@ export const fetchEnvironments = async (projectId: string): Promise<Environment[
 
 export const saveEnvironment = async (environment: Environment) => {
     const id = environment.id;
-    await axios.put(`${configServiceUrl}/api/environments`, environment,
+    await axiosInstance.put(`${configServiceUrl}/api/environments`, environment,
         { headers: getHeaders() }
     );
     // Optimistic update
@@ -117,7 +118,7 @@ export const saveEnvironment = async (environment: Environment) => {
 export const deleteEnvironment = async (environment: Environment) => {
     const id = environment.id;
     console.log(`deleting environment ${environment.name}`);
-    await axios.delete(`${configServiceUrl}/api/environments?id=${environment.id}`,
+    await axiosInstance.delete(`${configServiceUrl}/api/environments?id=${environment.id}`,
         { headers: getHeaders() }
     );
     // Optimistic update
@@ -125,11 +126,9 @@ export const deleteEnvironment = async (environment: Environment) => {
 };
 
 export const fetchConfigs = async (branchId: string): Promise<Config[]> => {
-    const response = await axios.get(`${configServiceUrl}/api/configs?branchId=${branchId}`,
-        { headers: getHeaders() }
+    console.log(`fetchConfigs: branch ${branchId}`);
+    const response = await axiosInstance.get(`${configServiceUrl}/api/configs?branchId=${branchId}`,
+        { headers: getHeaders() },
     );
     return response.data;
 };
-  
-// Add more functions as needed...
-// export default { fetchProjects, fetchBranches, fetchConfigs };

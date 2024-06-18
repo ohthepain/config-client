@@ -4,7 +4,6 @@ import {
   faChevronRight,
   faChevronDown,
 } from "@fortawesome/free-solid-svg-icons";
-import { Project } from "../models/Project";
 import { Branch } from "../models/Branch";
 import { Config } from "../models/Config";
 import {
@@ -93,7 +92,7 @@ const ProjectDropdown: React.FC = () => {
           <option value="">Select a branch</option>
           {branches.map((branch) => (
             <option key={branch.id} value={branch.id}>
-              {branch.name}
+              {branch.gitBranch}
             </option>
           ))}
         </select>

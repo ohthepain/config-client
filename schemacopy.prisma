@@ -37,7 +37,7 @@ model Project {
     // configs   Config[]
     branches     Branch[]
     gitRepo      String?       @db.VarChar(1024)
-    // bucket       String?       @db.VarChar(1024)
+    bucket       String?       @db.VarChar(1024)
     createdAt    DateTime      @default(now())
     updatedAt    DateTime      @updatedAt
     environments Environment[]
@@ -47,11 +47,13 @@ model Branch {
     id        String   @id @default(uuid())
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
-    name      String   @unique @db.VarChar(255)
+    // name      String   @db.VarChar(255)
     gitBranch String?  @db.VarChar(255)
     project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
     projectId String
     configs   Config[]
+
+    @@unique([projectId, gitBranch])
 }
 
 model Config {

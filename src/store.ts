@@ -14,6 +14,8 @@ interface StoreState {
     githubAccessToken: string | null;
     // projectId: string | null;
     // idk if this is a good idea - maybe use a getter instead?
+    editAccount: boolean;
+    setEditAccount: (editAccount: boolean) => void;
     project: Project | null;
     editProject: boolean;
     projects: Project[];
@@ -43,7 +45,7 @@ interface StoreState {
     addProject: (project: Project) => void;
     updateProject: (project: Project) => void;
     deleteProject: (id: string) => void;
-    setBranchId: (branchId: string | null) => void;
+    // setBranchId: (branchId: string | null) => void;
     setBranch: (branch: Branch | undefined) => void;
     setBranches: (branches: Branch[]) => void;
     addBranch: (branch: Branch) => void;
@@ -76,6 +78,7 @@ export const useStore = create<StoreState>()(
             configId: null,
             project: null,
             editProject: false,
+            editAccount: false,
             projects: [],
             branchId: null,
             branch: null,
@@ -85,6 +88,7 @@ export const useStore = create<StoreState>()(
             setGithubAccount: (account: string | null) => set(() => ({ githubAccount: account })),
             setGithubAccessToken: (token: string | null) => set(() => ({ githubAccessToken: token })),
             setEmail: (email: string) => set(() => ({ email: email })),
+            setEditAccount: (editAccount: boolean) => set(() => ({ editAccount: editAccount })),
             setPassword: (password: string) => set(() => ({ password: password })),
             // setProjectId: (projectId: string | null) => set((state) => ({ projectId : projectId, project: state.projects.find(p => p.id === projectId)})),
             setProject: (project: Project | undefined) => set(() => ({ project: project })),
@@ -93,7 +97,7 @@ export const useStore = create<StoreState>()(
             addProject: (project: Project) => set((state) => ({ projects: [...state.projects, project] })),
             updateProject: (project: Project) => set((state) => ({ projects: state.projects.map(p => p.id === project.id ? project : p) })),
             deleteProject: (id: string) => set((state) => ({ projects: state.projects.filter(project => project.id !== id) })),
-            setBranchId: (branchId: string | null) => set(() => ({ branchId: branchId })),
+            // setBranchId: (branchId: string | null) => set(() => ({ branchId: branchId })),
             setBranch: (branch: Branch | undefined) => set(() => ({ branch: branch })),
             setBranches: (branches: Branch[]) => set(() => ({ branches: branches })),
             addBranch: (branch: Branch) => set((state) => ({ branches: [...state.branches, branch] })),

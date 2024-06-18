@@ -10,6 +10,7 @@ axiosInstance.interceptors.response.use(
     return response;
   },
   (error: AxiosError) => {
+    console.log("AxiosInterceptor: error", error.response?.status, error.response?.data)
     if (error.response?.status === 401) {
       useStore.getState().setToken(null);
       console.error("Unauthorized. Redirecting to login page...");

@@ -1,23 +1,47 @@
 import { useEffect } from "react";
-// import produce from "immer";
 import { useStore } from "../store";
-import { Environment } from "models/Environment";
-import { Branch } from "models/Branch";
-import { fetchEnvironments, fetchProjects } from "../services/RequestManager";
+import { Environment } from "../models/Environment";
+import { Branch } from "../models/Branch";
+import { fetchEnvironments, fetchProjects, fetchBranches } from "../services/RequestManager";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import { Project } from "../models/Project";
 
+const onClickNewProject = () => {
+    console.log(`onClickNewProject`);
+    useStore.getState().setProject(new Project({
+    name: "New Project",
+    }));
+    useStore.getState().setEditProject(true);
+}
+
+const onClickNewBranch = () => {
+    const project: Project | null = useStore.getState().project;
+    console.log(`onClickNewBranch: projectId ${project?.id}`);
+    const newBranch = new Branch({
+        projectId: project!.id,
+        project: project!
+    });
+    // useStore.getState().setEditBranch(true);
+    // Optimistic update
+    useStore.getState().addBranch(newBranch)
+    useStore.getState().setBranch(newBranch);
+}
+
+const onClickNewEnvironment = () => {
+    console.log(`onClickNewEnvironment`);
+    useStore.getState().setEnvironment(new Environment({
+        name: "New Environment",
+    }));
+    // useStore.getState().setEditProject(true);
+}
+  
 export const SideBar = () => {
-//   const { projectId, setProjectId } = useStore();
   const { project, setProject, setEditProject } = useStore();
   const { projects, setProjects } = useStore();
   const { branches, branch, setBranch } = useStore();
   const { environment, setEnvironment } = useStore();
   const { environments, setEnvironments } = useStore();
-//   const [_environments, _setEnvironments] = useState<Environment[]>([]);
-//   const [_projects, _setProjects] = useState<Project[]>([]);
-//   const [_projectId, _setProjectId] = useState<string>(project?.id);
-//   const [ environment, setEnvironment ] = useState<Environment | undefined>(undefined);
-//   const { environmentId, setEnvironmentId } = useStore();
-//   const [_environmentId, _setEnvironmentId] = useState<string>("");
 
   const _fetchEnvironments = async () => {
     // console.log(`_fetchEnvironments: project ${_projectId}`)
@@ -34,47 +58,35 @@ export const SideBar = () => {
     }
   };
 
-  // Fetch projects on initial render.
-  // If projectId is set, fetch environments for that project.
-  // Detect changes to projectId and fetch environments for the new project.
-  // Detect changes to environments and update the local state.
-
   useEffect(() => {
-    // console.log(`useEffect: _projectId ${_projectId}`);
-    // const project = projects.find(p => p.id === _projectId);
-    // setProject(project);
+    setEnvironment(undefined);
+    setBranch(undefined);
     _fetchEnvironments();
-
-    // const unsubscribe = useStore.subscribe((state) => {
-    //   if (state.environments !== environments) {
-    //     _setEnvironments(environments);
-    //   }
-    // });
-
-    // return unsubscribe;
+    fetchBranches(project?.id);
   }, [project]);
-
-//   useEffect(() => {
-//     console.log(`useEffect: _environmentId ${_environmentId}`);
-//     setEnvironmentId(_environmentId);
-//   }, [_environmentId]);
 
   useEffect(() => {
     console.log(`useEffect: []`);
     fetchProjects().then((projs) => {
       setProjects(projs);
-    //   _setProjects(projs);
     });
-    // TOFO: how to restore project?
-    // _setProjectId(projectId || "");
   }, []);
 
   return (
     <div className="basis-1/4 flex-col top-0 left-0 h-screen min-w-48 flex-column bg-slate-100 p-4">
       <div className="py-2"/>
+      <div className="flex flex-row justify-between">
       <h2 className="font-display font-medium text-slate-900 dark:text-white">
         Projects
       </h2>
+        <button className="bg-gray-200 hover:bg-gray-300 rounded-md shadow-md h-6 w-6 inline-block transition-colors duration-300"
+          onClick={() => {
+            // setEditing(!editing);
+          }}
+        >
+          <FontAwesomeIcon icon={faPlus} onClick={onClickNewProject}/>
+        </button>
+      </div>
       <ul
         role="list"
         className="mt-2 space-y-2 border-l-2 border-slate-100 lg:mt-4 lg:space-y-4 lg:border-slate-200 dark:border-slate-800"
@@ -88,6 +100,8 @@ export const SideBar = () => {
               console.log(JSON.stringify(target.id));
               const project = projects.find(p => p.id === target.id)
               setProject(project);
+              console.log(`fetchBranches ${project!.id}`)
+              fetchBranches(project!.id)
             }}
           >
             <li className="relative" key={project.id}>
@@ -99,20 +113,25 @@ export const SideBar = () => {
               </a>
             </li>
             <li className="relative" key={`_{project.id}`} onClick={() => { setEditProject(true) }}>
-              <a
-                className="block w-full pl-3.5 before:pointer-events-none before:absolute before:-left-1 before:top-1/2 before:h-1.5 before:w-1.5 before:-translate-y-1/2 before:rounded-full text-slate-500 before:hidden before:bg-slate-300 hover:text-slate-600 hover:before:block dark:text-slate-400 dark:before:bg-slate-700 dark:hover:text-slate-300"
-                href="/docs/installation"
-              >
                 Edit
-              </a>
             </li>
           </div>
         ))}
       </ul>
 
+      <div className="py-2"/>
+      <div className="flex flex-row justify-between">
       <h2 className="font-display font-medium text-slate-900 dark:text-white">
         Branches
       </h2>
+      <button className="bg-gray-200 hover:bg-gray-300 rounded-md shadow-md h-6 w-6 inline-block transition-colors duration-300"
+          onClick={() => {
+            // setEditing(!editing);
+          }}
+        >
+          <FontAwesomeIcon icon={faPlus} onClick={onClickNewBranch}/>
+      </button>
+      </div>
       <ul
         role="list"
         className="mt-2 border-l-2 border-slate-100 lg:mt-4 lg:space-y-4 lg:border-slate-200 dark:border-slate-800"
@@ -122,7 +141,6 @@ export const SideBar = () => {
             id={_branch.id}
             key={_branch.id}
             onClick={(event: React.MouseEvent<HTMLDivElement>) => {
-                // console.log(`environment.id ${environment?.id}`);
               const target = event.currentTarget as HTMLDivElement;
               console.log(`branchId ${JSON.stringify(target.id)} vs ${branch?.id}`);
               if (target.id != branch?.id) {
@@ -136,7 +154,7 @@ export const SideBar = () => {
               <a
                 className="block w-full pl-3.5 before:pointer-events-none before:absolute before:-left-1 before:top-1/2 before:h-1.5 before:w-1.5 before:-translate-y-1/2 before:rounded-full font-semibold text-sky-500 before:bg-sky-500"
               >
-                {_branch.name}
+                {_branch.gitBranch}
               </a>
             </li>
             <li className="relative">
@@ -158,9 +176,19 @@ export const SideBar = () => {
         ))}
       </ul>
 
+      <div className="py-2"/>
+      <div className="flex flex-row justify-between">
       <h2 className="font-display font-medium text-slate-900 dark:text-white">
         Environments
       </h2>
+      <button className="bg-gray-200 hover:bg-gray-300 rounded-md shadow-md h-6 w-6 inline-block transition-colors duration-300"
+          onClick={() => {
+            // setEditing(!editing);
+          }}
+        >
+          <FontAwesomeIcon icon={faPlus} onClick={onClickNewEnvironment}/>
+      </button>
+      </div>
       <ul
         role="list"
         className="mt-2 border-l-2 border-slate-100 lg:mt-4 lg:space-y-4 lg:border-slate-200 dark:border-slate-800"

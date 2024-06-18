@@ -10,7 +10,7 @@ interface EnvironmentFormProps {
 }
 
 const EnvironmentForm: React.FC<EnvironmentFormProps> = (props) => {
-  console.log(`EnvironmentForm: render ${props.environment.name}`);
+//   console.log(`EnvironmentForm: render ${props.environment.name}`);
   const [environment, setEnvironment] = useState<Environment>(props.environment);
   const { project } = useStore();
   const [confirmDelete, setConfirmDelete] = useState(false);
@@ -80,7 +80,7 @@ const EnvironmentForm: React.FC<EnvironmentFormProps> = (props) => {
   return (
     <div className="m-4 flex flex-col shrink p-4 w-full font-sans shadow-xl rounded-xl bg-slate-50 hover:bg-sky-50">
       <div className="flex full-width">
-        <h2>{environment ? "Edit Environment" : "New Environment"}</h2>
+        <h2 className="flex justify-center w-full bg-green-200">{environment ? "Edit Environment" : "New Environment"}</h2>
         {/* <button onClick={handleCancel}>Cancel</button> */}
 
         {confirmDelete && (

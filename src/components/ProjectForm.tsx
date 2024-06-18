@@ -35,6 +35,7 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
     try {
       await deleteProject(project);
       onDelete();
+      useStore.getState().setEditProject(false);
     } catch (error) {
       console.error("Error deleting project:", error);
     }
@@ -50,13 +51,15 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
     }
   };
 
-  getRepositoriesForAccount(githubAccount!, githubAccessToken!)
-    .then((repositories: GitRepo[]) => {
-      setGitRepos(repositories);
-    })
-    .catch((error) => {
-      console.error("Error:", error);
-    });
+  useEffect(() => {
+    getRepositoriesForAccount(githubAccount!, githubAccessToken!)
+        .then((repositories: GitRepo[]) => {
+            setGitRepos(repositories);
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+        });
+  }, []);
 
   return (
     <div className="flex flex-col">

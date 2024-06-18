@@ -11,7 +11,7 @@
 //   }
 //   return (
 //     <div onClick={() => console.log(config)}>
-//       <h2>Config {config.id} Branch: {"config.branch.name"}</h2>
+//       <h2>Config {config.id} Branch: {"config.branch.gitBranch"}</h2>
 //       <p>Key: {config.notes}</p>
 //       <p>Value: {config.gitHash}</p>
 //       <p>Description: {config.createdAt}</p>

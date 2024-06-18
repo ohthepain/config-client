@@ -11,7 +11,7 @@ const BranchEntry: React.FC<BranchDisplayProps> = ({ branch }) => {
     }
   return (
     <div className="flex branch-card" onClick={() => console.log(branch)}>
-      <h3>Branch {branch.id} Branch: {branch.name ? branch.name : 'None'}</h3>
+      <h3>Branch {branch.id} Branch: {branch.gitBranch ? branch.gitBranch : 'None'}</h3>
       <div>GIT: {branch.gitBranch}</div>
     </div>
   );
