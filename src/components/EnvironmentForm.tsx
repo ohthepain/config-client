@@ -10,8 +10,10 @@ interface EnvironmentFormProps {
 }
 
 const EnvironmentForm: React.FC<EnvironmentFormProps> = (props) => {
-//   console.log(`EnvironmentForm: render ${props.environment.name}`);
-  const [environment, setEnvironment] = useState<Environment>(props.environment);
+  //   console.log(`EnvironmentForm: render ${props.environment.name}`);
+  const [environment, setEnvironment] = useState<Environment>(
+    props.environment,
+  );
   const { project } = useStore();
   const [confirmDelete, setConfirmDelete] = useState(false);
 
@@ -61,26 +63,28 @@ const EnvironmentForm: React.FC<EnvironmentFormProps> = (props) => {
 
   const clearInputs = () => {
     const newEnvironment: Environment = new Environment({
-        id: undefined,
-        name: "(New Environment)",
-        projectId: project?.id,
-        globalTimeTravel: 0,
-        notificationUrl: environment.notificationUrl,
-        uploadLocation: environment.uploadLocation,
-        clientDownloadBucket: environment.clientDownloadBucket,
-        clientDownloadKey: environment.clientDownloadKey,
-        downloadUrl: environment.downloadUrl,
-        awsRegion: environment.awsRegion,
-        warningMessage: environment.warningMessage,
+      id: undefined,
+      name: "(New Environment)",
+      projectId: project?.id,
+      globalTimeTravel: 0,
+      notificationUrl: environment.notificationUrl,
+      uploadLocation: environment.uploadLocation,
+      clientDownloadBucket: environment.clientDownloadBucket,
+      clientDownloadKey: environment.clientDownloadKey,
+      downloadUrl: environment.downloadUrl,
+      awsRegion: environment.awsRegion,
+      warningMessage: environment.warningMessage,
     });
 
     setEnvironment(newEnvironment);
   };
 
   return (
-    <div className="m-4 flex flex-col shrink p-4 w-full font-sans shadow-xl rounded-xl bg-slate-50 hover:bg-sky-50">
-      <div className="flex full-width">
-        <h2 className="flex justify-center w-full bg-green-200">{environment ? "Edit Environment" : "New Environment"}</h2>
+    <div className="m-4 flex w-full shrink flex-col rounded-xl bg-slate-50 p-4 font-sans shadow-xl hover:bg-sky-50">
+      <div className="full-width flex">
+        <h2 className="flex w-full justify-center bg-green-200">
+          {environment ? "Edit Environment" : "New Environment"}
+        </h2>
         {/* <button onClick={handleCancel}>Cancel</button> */}
 
         {confirmDelete && (
@@ -92,12 +96,16 @@ const EnvironmentForm: React.FC<EnvironmentFormProps> = (props) => {
         )}
       </div>
       <div className="flex">
-        <label htmlFor="name" className="flex-title">Name:</label>
+        <label htmlFor="name" className="flex-title">
+          Name:
+        </label>
         <input
           id="name"
           type="text"
           value={environment.name || ""}
-          onChange={(e) => setEnvironment({...environment, name: e.target.value})}
+          onChange={(e) =>
+            setEnvironment({ ...environment, name: e.target.value })
+          }
         />
       </div>
       <div className="flex">
@@ -106,7 +114,9 @@ const EnvironmentForm: React.FC<EnvironmentFormProps> = (props) => {
           id="notificationUrl"
           type="text"
           value={environment.notificationUrl}
-          onChange={(e) => {setEnvironment({...environment, notificationUrl: e.target.value})}}
+          onChange={(e) => {
+            setEnvironment({ ...environment, notificationUrl: e.target.value });
+          }}
         />
       </div>
       <div className="flex">
@@ -115,7 +125,9 @@ const EnvironmentForm: React.FC<EnvironmentFormProps> = (props) => {
           id="awsRegion"
           type="text"
           value={environment.awsRegion}
-          onChange={(e) => {setEnvironment({...environment, awsRegion: e.target.value})}}
+          onChange={(e) => {
+            setEnvironment({ ...environment, awsRegion: e.target.value });
+          }}
         />
       </div>
       <div className="flex">
@@ -124,7 +136,12 @@ const EnvironmentForm: React.FC<EnvironmentFormProps> = (props) => {
           id="clientDownloadBucket"
           type="text"
           value={environment.clientDownloadBucket}
-          onChange={(e) => {setEnvironment({...environment, clientDownloadBucket: e.target.value})}}
+          onChange={(e) => {
+            setEnvironment({
+              ...environment,
+              clientDownloadBucket: e.target.value,
+            });
+          }}
         />
       </div>
       <div className="flex">
@@ -133,7 +150,12 @@ const EnvironmentForm: React.FC<EnvironmentFormProps> = (props) => {
           id="clientDownloadKey"
           type="text"
           value={environment.clientDownloadKey}
-          onChange={(e) => {setEnvironment({...environment, clientDownloadKey: e.target.value})}}
+          onChange={(e) => {
+            setEnvironment({
+              ...environment,
+              clientDownloadKey: e.target.value,
+            });
+          }}
         />
       </div>
       <div className="flex">
@@ -142,7 +164,9 @@ const EnvironmentForm: React.FC<EnvironmentFormProps> = (props) => {
           id="downloadUrl"
           type="text"
           value={environment.downloadUrl}
-          onChange={(e) => {setEnvironment({...environment, downloadUrl: e.target.value})}}
+          onChange={(e) => {
+            setEnvironment({ ...environment, downloadUrl: e.target.value });
+          }}
         />
       </div>
       <label htmlFor="warningMessage">Modification Warning Message:</label>
@@ -151,19 +175,21 @@ const EnvironmentForm: React.FC<EnvironmentFormProps> = (props) => {
           id="warningMessage"
           type="text"
           value={environment.warningMessage}
-          onChange={(e) => {setEnvironment({...environment, warningMessage: e.target.value})}}
+          onChange={(e) => {
+            setEnvironment({ ...environment, warningMessage: e.target.value });
+          }}
         />
       </div>
       {environment?.id && <div>id: {environment?.id}</div>}
-      <div className="flex flex-row flex-auto">
+      <div className="flex flex-auto flex-row">
         <button
-          className="flex place-content-center m-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded h-10"
+          className="m-4 flex h-10 place-content-center rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700"
           onClick={handleSave}
         >
           Save
         </button>
         <button
-          className="flex place-content-center m-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded h-10"
+          className="m-4 flex h-10 place-content-center rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700"
           onClick={handleDelete}
         >
           Delete

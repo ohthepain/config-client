@@ -1,114 +1,114 @@
 .environment-card {
-    display: flex;
-    flex-direction: column;
-    width: 400px; /* Adjust the width as needed */
-    /* height: 4rem; */
-    border-radius: 6px;
-    background-color: moccasin;
-    padding: 0.5rem;
-    margin: 0.5rem;
-    justify-content: space-between;
+  display: flex;
+  flex-direction: column;
+  width: 400px; /* Adjust the width as needed */
+  /* height: 4rem; */
+  border-radius: 6px;
+  background-color: moccasin;
+  padding: 0.5rem;
+  margin: 0.5rem;
+  justify-content: space-between;
 }
 
 .ConfigList {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 .ConfigEntry {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 .zen-mode-transition {
-    /* transition: -webkit-transform .5s ease-in-out;
+  /* transition: -webkit-transform .5s ease-in-out;
     transition: transform .5s ease-in-out; */
-    transition: background-color 0.1s 0s ease-out;
-    /* transition: transform .5s ease-in-out, -webkit-transform .5s ease-in-out; */
+  transition: background-color 0.1s 0s ease-out;
+  /* transition: transform .5s ease-in-out, -webkit-transform .5s ease-in-out; */
 }
 
 .Button-icon {
-    width: 24px;
-    height: 24px;
-    fill: none;
-    stroke-width: 2;
+  width: 24px;
+  height: 24px;
+  fill: none;
+  stroke-width: 2;
 }
 
 .text-button {
-    gap: 6;
-    align-items: center;
-    /* background-color: transparent; */
-    /* background-color: var(--island-bg-color); */
-    border-color: var(--default-border-color);
-    /* background-color: aqua; */
-    border-radius: 0;
-    border-style: solid;
-    border-width: 1px;
-    box-sizing: border-box;
-    color: var(--text-primary-color);
-    cursor: pointer;
-    display: flex;
-    height: 1rem;
-    /* height: var(--default-button-size);
+  gap: 6;
+  align-items: center;
+  /* background-color: transparent; */
+  /* background-color: var(--island-bg-color); */
+  border-color: var(--default-border-color);
+  /* background-color: aqua; */
+  border-radius: 0;
+  border-style: solid;
+  border-width: 1px;
+  box-sizing: border-box;
+  color: var(--text-primary-color);
+  cursor: pointer;
+  display: flex;
+  height: 1rem;
+  /* height: var(--default-button-size);
     height: var(--lg-button-size); */
-    justify-content: center;
-    padding: 0.625rem;
-    /* width: var(--default-button-size); */
-    /* width: var(--lg-button-size); */
+  justify-content: center;
+  padding: 0.625rem;
+  /* width: var(--default-button-size); */
+  /* width: var(--lg-button-size); */
 }
 
 .menu-button-borderless {
-    /* gap: 6; */
-    /* background-color: white; */
-    align-items: center;
-    /* background-color: transparent; */
-    /* background-color: var(--island-bg-color); */
-    /* border-color: var(--default-border-color);
+  /* gap: 6; */
+  /* background-color: white; */
+  align-items: center;
+  /* background-color: transparent; */
+  /* background-color: var(--island-bg-color); */
+  /* border-color: var(--default-border-color);
     border-radius: var(--border-radius-lg);
     border-style: solid;
     border-width: 1px; */
-    /* box-sizing: border-box; */
-    color: var(--text-primary-color);
-    cursor: pointer;
-    display: flex;
-    /* height: var(--default-button-size);
+  /* box-sizing: border-box; */
+  color: var(--text-primary-color);
+  cursor: pointer;
+  display: flex;
+  /* height: var(--default-button-size);
     height: var(--lg-button-size); */
-    justify-content: center;
-    padding: 0.625rem;
-    /* width: var(--default-button-size); */
-    width: var(--lg-button-size);
+  justify-content: center;
+  padding: 0.625rem;
+  /* width: var(--default-button-size); */
+  width: var(--lg-button-size);
 }
 
 .menu-button {
-    aspect-ratio: 1/1;
-    gap: 6;
-    background-color: white;
-    align-items: center;
-    /* background-color: transparent; */
-    /* background-color: var(--island-bg-color); */
-    border-color: var(--default-border-color);
-    border-radius: var(--border-radius-lg);
-    border-style: solid;
-    border-width: 1px;
-    box-sizing: border-box;
-    color: var(--text-primary-color);
-    cursor: pointer;
-    display: flex;
-    height: var(--default-button-size);
-    height: var(--lg-button-size);
-    justify-content: center;
-    padding: 0.625rem;
-    /* width: var(--default-button-size); */
-    width: var(--lg-button-size);
+  aspect-ratio: 1/1;
+  gap: 6;
+  background-color: white;
+  align-items: center;
+  /* background-color: transparent; */
+  /* background-color: var(--island-bg-color); */
+  border-color: var(--default-border-color);
+  border-radius: var(--border-radius-lg);
+  border-style: solid;
+  border-width: 1px;
+  box-sizing: border-box;
+  color: var(--text-primary-color);
+  cursor: pointer;
+  display: flex;
+  height: var(--default-button-size);
+  height: var(--lg-button-size);
+  justify-content: center;
+  padding: 0.625rem;
+  /* width: var(--default-button-size); */
+  width: var(--lg-button-size);
 }
 
 .menu-button:hover {
-    background-color: var(--color-gray-20);
-    scale: 1.1;
+  background-color: var(--color-gray-20);
+  scale: 1.1;
 }
 
 .menu-button:active {
-    background-color: var(--icon-fill-color);
+  background-color: var(--icon-fill-color);
 }

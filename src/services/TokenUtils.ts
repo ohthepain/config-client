@@ -1,7 +1,6 @@
-
 export function isTokenExpired(token) {
   // Split the token into its three parts (header, payload, and signature)
-  const [header, payload, signature] = token.split('.');
+  const [header, payload, signature] = token.split(".");
 
   // Decode the header
   const decodedHeader = JSON.parse(atob(header));

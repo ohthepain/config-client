@@ -22,10 +22,10 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
   const [confirmDelete, setConfirmDelete] = React.useState(false);
   const { githubAccount, githubAccessToken, setEditProject } = useStore();
 
-//   useEffect(() => {
-//     setName(project.name);
-//     setGitRepo(project.gitRepo);
-//   }, [project]);
+  //   useEffect(() => {
+  //     setName(project.name);
+  //     setGitRepo(project.gitRepo);
+  //   }, [project]);
 
   const handleDelete = async () => {
     setConfirmDelete(true);
@@ -53,19 +53,19 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
 
   useEffect(() => {
     getRepositoriesForAccount(githubAccount!, githubAccessToken!)
-        .then((repositories: GitRepo[]) => {
-            setGitRepos(repositories);
-        })
-        .catch((error) => {
-          console.error("Error:", error);
-        });
+      .then((repositories: GitRepo[]) => {
+        setGitRepos(repositories);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
   }, []);
 
   return (
     <div className="flex flex-col">
       <div className="flex flex-row bg-fuchsia-200">
         <div className="flex w-full justify-center">Edit Project</div>
-        <div className="flex justify-center w-64 bg-white">
+        <div className="flex w-64 justify-center bg-white">
           <button
             className="close-button"
             onClick={() => {
@@ -76,11 +76,11 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
           </button>
         </div>
       </div>
-      <div className="flex flex-row h-full bg-slate-500 justify-center">
+      <div className="flex h-full flex-row justify-center bg-slate-500">
         <form onSubmit={handleSubmit}>
-          <div className="flex h-full bg-slate-200 justify-center m-2">
+          <div className="m-2 flex h-full justify-center bg-slate-200">
             <div className="flex flex-col">
-              <div className="flex justify-center w-full">
+              <div className="flex w-full justify-center">
                 <h2>Project name:</h2>
               </div>
               <div className="flex w-full">
@@ -109,18 +109,35 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
                 </select>
               </div>
             </div>
-            <div className="flex flex-col items-center w-64">
-              <button type="submit" className="flex m-2 w-32 place-content-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded h-10">Save</button>
-              <button type="button" onClick={handleDelete} className="flex m-2 w-32 place-content-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded h-10">
+            <div className="flex w-64 flex-col items-center">
+              <button
+                type="submit"
+                className="m-2 flex h-10 w-32 place-content-center rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700"
+              >
+                Save
+              </button>
+              <button
+                type="button"
+                onClick={handleDelete}
+                className="m-2 flex h-10 w-32 place-content-center rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700"
+              >
                 Delete
               </button>
               {confirmDelete && (
-                <div className="flex flex-col items-center p-2 bg-red-500">
+                <div className="flex flex-col items-center bg-red-500 p-2">
                   <strong>Are you sure you want to delete this project?</strong>
-                  <button type="button" onClick={() => setConfirmDelete(false)} className="flex m-2 w-32 place-content-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded h-10">
+                  <button
+                    type="button"
+                    onClick={() => setConfirmDelete(false)}
+                    className="m-2 flex h-10 w-32 place-content-center rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700"
+                  >
                     Cancel
                   </button>
-                  <button type="button" onClick={confirmDeleteAction} className="flex m-2 w-32 place-content-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded h-10">
+                  <button
+                    type="button"
+                    onClick={confirmDeleteAction}
+                    className="m-2 flex h-10 w-32 place-content-center rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700"
+                  >
                     Confirm
                   </button>
                 </div>

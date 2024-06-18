@@ -69,7 +69,7 @@ const ProjectDropdown: React.FC = () => {
           value={project?.id}
           onChange={(e) => {
             setProject(
-              projects.find((project) => project.id === e.target.value)
+              projects.find((project) => project.id === e.target.value),
             );
             fetchEnvironments(e.target.value);
           }}
@@ -85,7 +85,7 @@ const ProjectDropdown: React.FC = () => {
           value={branch?.id}
           onChange={(e) => {
             setBranch(
-              branches.find((project) => project.id === e.target.value)
+              branches.find((project) => project.id === e.target.value),
             );
           }}
         >

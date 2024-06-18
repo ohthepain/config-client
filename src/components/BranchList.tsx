@@ -1,27 +1,27 @@
-import React, { useState, useEffect } from 'react';
-import { Branch } from '../models/Branch';
-import { fetchBranches } from '../services/RequestManager';
-import BranchEntry from './BranchEntry';
-import { useStore } from '../store';
+import React, { useState, useEffect } from "react";
+import { Branch } from "../models/Branch";
+import { fetchBranches } from "../services/RequestManager";
+import BranchEntry from "./BranchEntry";
+import { useStore } from "../store";
 
 const BranchList: React.FC = () => {
   const [branches, setBranches] = useState<Branch[]>([]);
   const { branch } = useStore();
 
   useEffect(() => {
-        const fetchData = async () => {
-            try {
-                var fetchedBranches: Branch[] = [];
-                if (branch) {
-                    fetchedBranches = await fetchBranches(branch.id);
-                }
-                setBranches(fetchedBranches);
-            } catch (error) {
-                console.error('Error fetching branchs:', error);
-            }
+    const fetchData = async () => {
+      try {
+        var fetchedBranches: Branch[] = [];
+        if (branch) {
+          fetchedBranches = await fetchBranches(branch.id);
         }
-        fetchData();
-    }, []);
+        setBranches(fetchedBranches);
+      } catch (error) {
+        console.error("Error fetching branchs:", error);
+      }
+    };
+    fetchData();
+  }, []);
 
   return (
     <div>
@@ -34,4 +34,3 @@ const BranchList: React.FC = () => {
 };
 
 export default BranchList;
-

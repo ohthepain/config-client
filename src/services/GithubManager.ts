@@ -1,21 +1,23 @@
-import { Octokit } from '@octokit/rest';
-import { GitRepo } from '../models/GitRepo';
-import { GitBranch } from '../models/GitBranch';
+import { Octokit } from "@octokit/rest";
+import { GitRepo } from "../models/GitRepo";
+import { GitBranch } from "../models/GitBranch";
 
-export async function getRepositoriesForAccount(githubAccount: string, githubAccessToken: string): Promise<GitRepo[]> {
-    
+export async function getRepositoriesForAccount(
+  githubAccount: string,
+  githubAccessToken: string,
+): Promise<GitRepo[]> {
   const octokit = new Octokit({ auth: githubAccessToken });
 
   try {
     const response = await octokit.rest.repos.listForUser({
       username: githubAccount!,
-    //   type: "private",
+      //   type: "private",
     });
 
-    var repos = []
+    var repos = [];
     for (let repo of response.data) {
-        // console.log(`${JSON.stringify(repo)}\n`);
-        repos.push(new GitRepo(repo));
+      // console.log(`${JSON.stringify(repo)}\n`);
+      repos.push(new GitRepo(repo));
     }
 
     return repos;
@@ -25,8 +27,11 @@ export async function getRepositoriesForAccount(githubAccount: string, githubAcc
   }
 }
 
-export async function getBranchesForRepo(githubAccount: string, githubAccessToken: string, gitRepo: string): Promise<GitBranch[]> {
-
+export async function getBranchesForRepo(
+  githubAccount: string,
+  githubAccessToken: string,
+  gitRepo: string,
+): Promise<GitBranch[]> {
   const octokit = new Octokit({ auth: githubAccessToken });
 
   console.log(`getBranchesForRepo ${githubAccount} / ${gitRepo}`);
@@ -42,7 +47,7 @@ export async function getBranchesForRepo(githubAccount: string, githubAccessToke
         perPage: perPage,
         page: page,
         owner: owner,
-        repo: gitRepo
+        repo: gitRepo,
       });
 
       _branches = _branches.concat(response.data);
