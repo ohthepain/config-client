@@ -187,7 +187,7 @@ export const SideBar = () => {
           role="list"
           className="mt-2 border-l-2 border-slate-100 lg:mt-4 lg:space-y-4 lg:border-slate-200 dark:border-slate-800"
         >
-          <Droppable droppableId="droppable" key="droppable foo">
+          <Droppable droppableId="droppable" key="droppable">
             {(provided) => (
               <div ref={provided.innerRef} {...provided.droppableProps}>
                 {branches.sort((a, b) => {
@@ -197,7 +197,7 @@ export const SideBar = () => {
                     return UserPreferencesManager.branchSort(project?.id, a, b);
                   }).map((_branch: Branch, index) => (
                     <Draggable
-                      key={_branch.id + "foo"}
+                      key={_branch.id}
                       draggableId={_branch.id}
                       index={index}
                     >
@@ -266,7 +266,7 @@ export const SideBar = () => {
           role="list"
           className="mt-2 border-l-2 border-slate-100 lg:mt-4 lg:space-y-4 lg:border-slate-200 dark:border-slate-800"
         >
-          <Droppable droppableId="droppable" key="droppable foo">
+          <Droppable droppableId="droppable" key="droppable">
             {(provided) => (
               <div ref={provided.innerRef} {...provided.droppableProps}>
                 {environments.sort((a, b) => {
@@ -276,7 +276,7 @@ export const SideBar = () => {
                                     return UserPreferencesManager.environmentSort(project?.id, a, b);
                                   }).map((_environment, index) => (
                   <Draggable
-                    key={_environment.id + "foo"}
+                    key={_environment.id}
                     draggableId={_environment.id}
                     index={index}
                   >

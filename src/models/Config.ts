@@ -1,10 +1,12 @@
+import { Environment } from "./Environment";
+
 export class Config {
   id: any;
   status: any;
   projectId: any;
   branch: any;
   branchId: any;
-  environments: any;
+  environments: Environment[];
   userId: any;
   user: any;
   notes: any;

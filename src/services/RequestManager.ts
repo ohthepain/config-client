@@ -85,7 +85,7 @@ export const saveBranch = async (branch: Branch) => {
 
 export const deleteBranch = async (branch: Branch) => {
   const id = branch.id;
-//   console.log(`deleting branch ${branch.gitBranch}`);
+  console.log(`deleting branch ${branch.gitBranch}`);
   await axiosInstance.delete(
     `${configServiceUrl}/api/branches?id=${branch.id}`,
     { headers: getHeaders() },
@@ -141,8 +141,16 @@ export const deleteEnvironment = async (environment: Environment) => {
   useStore.getState().deleteEnvironment(id);
 };
 
+export const deployConfig = async (configId: string, environmentId: string): Promise<void> => {
+    await axiosInstance.put(
+        `${configServiceUrl}/api/environments/deploy`,
+        { environmentId: environmentId, configId: configId },
+        { headers: getHeaders() }
+    );
+}
+
 export const fetchConfigs = async (branchId: string): Promise<Config[]> => {
-//   console.log(`fetchConfigs: branch ${branchId}`);
+  console.log(`fetchConfigs: branch ${branchId}`);
   const response = await axiosInstance.get(
     `${configServiceUrl}/api/configs?branchId=${branchId}`,
     { headers: getHeaders() },

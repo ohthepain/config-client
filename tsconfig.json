@@ -9,6 +9,9 @@
     /* My settings */
     "baseUrl": ".",
     "paths": {
+      "@/*": [
+        "./src/*"
+      ],
       "services/*": ["src/services/*"],
       "utils/*": ["src/utils/*"],
       "models/*": ["src/models/*"],
