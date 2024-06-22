@@ -16,7 +16,7 @@ const ConfigList: React.FC<ConfigListProps> = (props) => {
     try {
       var fetchedConfigs: Config[] = [];
       if (branch && branch.id) {
-        console.log(`fetching configs for branch ${JSON.stringify(branch)}`);
+        // console.log(`fetching configs for branch ${JSON.stringify(branch)}`);
         fetchedConfigs = await fetchConfigs(branch.id);
       }
       setConfigs(fetchedConfigs);
@@ -26,9 +26,7 @@ const ConfigList: React.FC<ConfigListProps> = (props) => {
   };
 
   useEffect(() => {
-    console.log(
-      `ConfigList: useEffect: branch ${branch ? branch.gitBranch : "null"}`,
-    );
+    // console.log(`ConfigList: useEffect: branch.gitBranch ${branch ? branch.gitBranch : "null"}`);
     fetchData();
   }, [branch]);
 

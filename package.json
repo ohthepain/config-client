@@ -13,6 +13,7 @@
   "dependencies": {
     "@fortawesome/free-solid-svg-icons": "^6.5.2",
     "@fortawesome/react-fontawesome": "^0.2.2",
+    "@hello-pangea/dnd": "^16.6.0",
     "@octokit/rest": "^20.1.1",
     "axios": "^1.7.2",
     "child_process": "^1.0.2",

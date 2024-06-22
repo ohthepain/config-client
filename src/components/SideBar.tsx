@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { useStore } from "../store";
+import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import { Environment } from "../models/Environment";
 import { Branch } from "../models/Branch";
 import {
@@ -10,6 +11,7 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { Project } from "../models/Project";
+import UserPreferencesManager from "../services/UserPreferencesManager";
 
 const onClickNewProject = () => {
   console.log(`onClickNewProject`);
@@ -30,7 +32,7 @@ const onClickNewBranch = () => {
   });
   // useStore.getState().setEditBranch(true);
   // Optimistic update
-  useStore.getState().addBranch(newBranch);
+  //   useStore.getState().addBranch(newBranch);
   useStore.getState().setBranch(newBranch);
 };
 
@@ -45,11 +47,43 @@ const onClickNewEnvironment = () => {
 };
 
 export const SideBar = () => {
-  const { project, setProject, setEditProject } = useStore();
+  const { project, setProject } = useStore();
   const { projects, setProjects } = useStore();
   const { branches, branch, setBranch } = useStore();
   const { environment, setEnvironment } = useStore();
   const { environments, setEnvironments } = useStore();
+
+  const onDragBranchEnd = (result: any) => {
+    // console.log(`onDragBranchEnd: ${JSON.stringify(result)}`);
+    // console.log(`project: ${JSON.stringify(project)}`);
+    // console.log(`branchId: ${result.draggableId}`);
+    // console.log(`result.destination.index: ${result.destination.index}`);
+    const branch: Branch = branches.find(
+      (branch) => branch.id === result.draggableId,
+    )!;
+    UserPreferencesManager.setBranchPosition(
+      project!.id,
+      result.draggableId,
+      branch.gitBranch,
+      result.destination.index,
+    );
+  };
+
+  const onDragEnvironmentEnd = (result: any) => {
+    // console.log(`onDragEnvironmentEnd: ${JSON.stringify(result)}`);
+    // console.log(`project: ${JSON.stringify(project)}`);
+    // console.log(`environmentId: ${result.draggableId}`);
+    // console.log(`result.destination.index: ${result.destination.index}`);
+    const environment: Environment = environments.find(
+      (environment) => environment.id === result.draggableId,
+    )!;
+    UserPreferencesManager.setEnvironmentPosition(
+      project!.id,
+      result.draggableId,
+      environment.name,
+      result.destination.index,
+    );
+  };
 
   const _fetchEnvironments = async () => {
     // console.log(`_fetchEnvironments: project ${_projectId}`)
@@ -74,7 +108,6 @@ export const SideBar = () => {
   }, [project]);
 
   useEffect(() => {
-    console.log(`useEffect: []`);
     fetchProjects().then((projs) => {
       setProjects(projs);
     });
@@ -124,9 +157,9 @@ export const SideBar = () => {
             <li
               className="relative"
               key={`_{project.id}`}
-              onClick={() => {
-                setEditProject(true);
-              }}
+              // onClick={() => {
+              //   setEditProject(true);
+              // }}
             >
               Edit
             </li>
@@ -148,47 +181,70 @@ export const SideBar = () => {
           <FontAwesomeIcon icon={faPlus} onClick={onClickNewBranch} />
         </button>
       </div>
-      <ul
-        role="list"
-        className="mt-2 border-l-2 border-slate-100 lg:mt-4 lg:space-y-4 lg:border-slate-200 dark:border-slate-800"
-      >
-        {branches.map((_branch) => (
-          <div
-            id={_branch.id}
-            key={_branch.id}
-            onClick={(event: React.MouseEvent<HTMLDivElement>) => {
-              const target = event.currentTarget as HTMLDivElement;
-              console.log(
-                `branchId ${JSON.stringify(target.id)} vs ${branch?.id}`,
-              );
-              if (target.id != branch?.id) {
-                const _branch: Branch | undefined = branches.find(
-                  (e) => e.id === target.id,
-                );
-                console.log(`setBranch ${JSON.stringify(_branch)}`);
-                setBranch(_branch);
-              }
-            }}
-          >
-            <li className="relative">
-              <a className="block w-full pl-3.5 font-semibold text-sky-500 before:pointer-events-none before:absolute before:-left-1 before:top-1/2 before:h-1.5 before:w-1.5 before:-translate-y-1/2 before:rounded-full before:bg-sky-500">
-                {_branch.gitBranch}
-              </a>
-            </li>
-            <li className="relative">
-              <a className="block w-full pl-3.5 text-slate-500 before:pointer-events-none before:absolute before:-left-1 before:top-1/2 before:hidden before:h-1.5 before:w-1.5 before:-translate-y-1/2 before:rounded-full before:bg-slate-300 hover:text-slate-600 hover:before:block dark:text-slate-400 dark:before:bg-slate-700 dark:hover:text-slate-300">
-                gitBranch -{" "}
-                {_branch.gitBranch ? `${_branch.gitBranch}` : `none`}
-              </a>
-            </li>
-            <li className="relative">
-              <a className="block w-full pl-3.5 text-slate-500 before:pointer-events-none before:absolute before:-left-1 before:top-1/2 before:hidden before:h-1.5 before:w-1.5 before:-translate-y-1/2 before:rounded-full before:bg-slate-300 hover:text-slate-600 hover:before:block dark:text-slate-400 dark:before:bg-slate-700 dark:hover:text-slate-300">
-                Edit
-              </a>
-            </li>
-          </div>
-        ))}
-      </ul>
+
+      <DragDropContext onDragEnd={onDragBranchEnd}>
+        <ul
+          role="list"
+          className="mt-2 border-l-2 border-slate-100 lg:mt-4 lg:space-y-4 lg:border-slate-200 dark:border-slate-800"
+        >
+          <Droppable droppableId="droppable" key="droppable foo">
+            {(provided) => (
+              <div ref={provided.innerRef} {...provided.droppableProps}>
+                {branches.sort((a, b) => {
+                    // console.log(
+                    //   `sort a.gitBranch ${a.gitBranch} b.gitBranch ${b.gitBranch}`,
+                    // );
+                    return UserPreferencesManager.branchSort(project?.id, a, b);
+                  }).map((_branch: Branch, index) => (
+                    <Draggable
+                      key={_branch.id + "foo"}
+                      draggableId={_branch.id}
+                      index={index}
+                    >
+                      {(provided) => (
+                        <div
+                          className="cursor-pointer select-none"
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                          {...provided.dragHandleProps}
+                          id={_branch.id}
+                          // key={_branch.id}
+                          onClick={(
+                            event: React.MouseEvent<HTMLDivElement>,
+                          ) => {
+                            const target =
+                              event.currentTarget as HTMLDivElement;
+                            // console.log(
+                            //   `branchId ${JSON.stringify(target.id)} vs ${branch?.id}`,
+                            // );
+                            if (target.id != branch?.id) {
+                              const _branch: Branch | undefined = branches.find(
+                                (e) => e.id === target.id,
+                              );
+                              setBranch(_branch);
+                            }
+                          }}
+                        >
+                          <li className="relative">
+                            <a className="block w-full pl-3.5 font-semibold text-sky-500 before:pointer-events-none before:absolute before:-left-1 before:top-1/2 before:h-1.5 before:w-1.5 before:-translate-y-1/2 before:rounded-full before:bg-sky-500">
+                              {_branch.gitBranch}
+                            </a>
+                          </li>
+                          <li className="relative">
+                            <a className="block w-full pl-3.5 text-slate-500 before:pointer-events-none before:absolute before:-left-1 before:top-1/2 before:hidden before:h-1.5 before:w-1.5 before:-translate-y-1/2 before:rounded-full before:bg-slate-300 hover:text-slate-600 hover:before:block dark:text-slate-400 dark:before:bg-slate-700 dark:hover:text-slate-300">
+                              Edit {_branch.id}
+                            </a>
+                          </li>
+                        </div>
+                      )}
+                    </Draggable>
+                  ))}
+                {provided.placeholder}
+              </div>
+            )}
+          </Droppable>
+        </ul>
+      </DragDropContext>
 
       <div className="py-2" />
       <div className="flex flex-row justify-between">
@@ -204,51 +260,81 @@ export const SideBar = () => {
           <FontAwesomeIcon icon={faPlus} onClick={onClickNewEnvironment} />
         </button>
       </div>
-      <ul
-        role="list"
-        className="mt-2 border-l-2 border-slate-100 lg:mt-4 lg:space-y-4 lg:border-slate-200 dark:border-slate-800"
-      >
-        {environments.map((_environment) => (
-          <div
-            id={_environment.id}
-            key={_environment.id}
-            onClick={(event: React.MouseEvent<HTMLDivElement>) => {
-              // console.log(`environment.id ${environment?.id}`);
-              const target = event.currentTarget as HTMLDivElement;
-              console.log(
-                `environmentId ${JSON.stringify(target.id)} vs ${environment?.id}`,
-              );
-              if (target.id != environment?.id) {
-                const env: Environment | undefined = environments.find(
-                  (e) => e.id === target.id,
-                );
-                console.log(`setEnvironment ${JSON.stringify(env)}`);
-                setEnvironment(env);
-              }
-            }}
-          >
-            <li className="relative">
-              <a className="block w-full pl-3.5 font-semibold text-sky-500 before:pointer-events-none before:absolute before:-left-1 before:top-1/2 before:h-1.5 before:w-1.5 before:-translate-y-1/2 before:rounded-full before:bg-sky-500">
-                {_environment.name}
-              </a>
-            </li>
-            <li className="relative">
-              <a className="block w-full pl-3.5 text-slate-500 before:pointer-events-none before:absolute before:-left-1 before:top-1/2 before:hidden before:h-1.5 before:w-1.5 before:-translate-y-1/2 before:rounded-full before:bg-slate-300 hover:text-slate-600 hover:before:block dark:text-slate-400 dark:before:bg-slate-700 dark:hover:text-slate-300">
-                Config -{" "}
-                {_environment.configId ? `${_environment.configId}` : `none`}
-              </a>
-            </li>
-            <li className="relative">
-              <a className="block w-full pl-3.5 text-slate-500 before:pointer-events-none before:absolute before:-left-1 before:top-1/2 before:hidden before:h-1.5 before:w-1.5 before:-translate-y-1/2 before:rounded-full before:bg-slate-300 hover:text-slate-600 hover:before:block dark:text-slate-400 dark:before:bg-slate-700 dark:hover:text-slate-300">
-                Bucket -{" "}
-                {_environment.clientDownloadBucket
-                  ? `${_environment.clientDownloadBucket}`
-                  : `none`}
-              </a>
-            </li>
-          </div>
-        ))}
-      </ul>
+
+      <DragDropContext onDragEnd={onDragEnvironmentEnd}>
+        <ul
+          role="list"
+          className="mt-2 border-l-2 border-slate-100 lg:mt-4 lg:space-y-4 lg:border-slate-200 dark:border-slate-800"
+        >
+          <Droppable droppableId="droppable" key="droppable foo">
+            {(provided) => (
+              <div ref={provided.innerRef} {...provided.droppableProps}>
+                {environments.sort((a, b) => {
+                                    // console.log(
+                                    //   `sort a.name ${a.name} b.name ${b.name}`,
+                                    // );
+                                    return UserPreferencesManager.environmentSort(project?.id, a, b);
+                                  }).map((_environment, index) => (
+                  <Draggable
+                    key={_environment.id + "foo"}
+                    draggableId={_environment.id}
+                    index={index}
+                  >
+                    {(provided) => (
+                      <div
+                        className="cursor-pointer select-none"
+                        ref={provided.innerRef}
+                        {...provided.draggableProps}
+                        {...provided.dragHandleProps}
+                        id={_environment.id}
+                        key={_environment.id}
+                        onClick={(event: React.MouseEvent<HTMLDivElement>) => {
+                          // console.log(`environment.id ${environment?.id}`);
+                          const target = event.currentTarget as HTMLDivElement;
+                          console.log(
+                            `environmentId ${JSON.stringify(target.id)} vs ${environment?.id}`,
+                          );
+                          if (target.id != environment?.id) {
+                            const env: Environment | undefined =
+                              environments.find((e) => e.id === target.id);
+                            console.log(
+                              `setEnvironment ${JSON.stringify(env)}`,
+                            );
+                            setEnvironment(env);
+                          }
+                        }}
+                      >
+                        <li className="relative">
+                          <a className="block w-full pl-3.5 font-semibold text-sky-500 before:pointer-events-none before:absolute before:-left-1 before:top-1/2 before:h-1.5 before:w-1.5 before:-translate-y-1/2 before:rounded-full before:bg-sky-500">
+                            {_environment.name}
+                          </a>
+                        </li>
+                        <li className="relative">
+                          <a className="block w-full pl-3.5 text-slate-500 before:pointer-events-none before:absolute before:-left-1 before:top-1/2 before:hidden before:h-1.5 before:w-1.5 before:-translate-y-1/2 before:rounded-full before:bg-slate-300 hover:text-slate-600 hover:before:block dark:text-slate-400 dark:before:bg-slate-700 dark:hover:text-slate-300">
+                            Config -{" "}
+                            {_environment.configId
+                              ? `${_environment.configId}`
+                              : `none`}
+                          </a>
+                        </li>
+                        <li className="relative">
+                          <a className="block w-full pl-3.5 text-slate-500 before:pointer-events-none before:absolute before:-left-1 before:top-1/2 before:hidden before:h-1.5 before:w-1.5 before:-translate-y-1/2 before:rounded-full before:bg-slate-300 hover:text-slate-600 hover:before:block dark:text-slate-400 dark:before:bg-slate-700 dark:hover:text-slate-300">
+                            Bucket -{" "}
+                            {_environment.clientDownloadBucket
+                              ? `${_environment.clientDownloadBucket}`
+                              : `none`}
+                          </a>
+                        </li>
+                      </div>
+                    )}
+                  </Draggable>
+                ))}
+                {provided.placeholder}
+              </div>
+            )}
+          </Droppable>
+        </ul>
+      </DragDropContext>
     </div>
   );
 };

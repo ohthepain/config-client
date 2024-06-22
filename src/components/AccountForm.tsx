@@ -1,7 +1,7 @@
 // Form for editing Account
-"use strict";
 import React from "react";
 import { useStore } from "../store";
+import UserPreferencesManager from "../services/UserPreferencesManager";
 
 const AccountForm: React.FC = () => {
   const {
@@ -35,6 +35,10 @@ const AccountForm: React.FC = () => {
       console.error("Error saving project:", error);
     }
   };
+
+  const deleteUserPreferences = async () => {
+    UserPreferencesManager.deleteProjectPreferences();
+  }    
 
   return (
     <form onSubmit={handleSubmit} className="bg-red rotate-0 shadow-xl">
@@ -73,6 +77,13 @@ const AccountForm: React.FC = () => {
         >
           Delete
         </button>
+        <button
+            type="button"
+            onClick={deleteUserPreferences}
+            className="m-2 flex h-10 place-content-center rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700"
+          >
+            Delete Prefs
+        </button>        
       </div>
       {confirmDelete && (
         <div>

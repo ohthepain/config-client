@@ -18,7 +18,7 @@ const EnvironmentForm: React.FC<EnvironmentFormProps> = (props) => {
   const [confirmDelete, setConfirmDelete] = useState(false);
 
   useEffect(() => {
-    console.log(`useEffect: setEnvironment ${props.environment.name}`);
+    // console.log(`useEffect: setEnvironment ${props.environment.name}`);
     setEnvironment(props.environment);
   }, [props.environment]);
 
@@ -51,8 +51,6 @@ const EnvironmentForm: React.FC<EnvironmentFormProps> = (props) => {
     try {
       await saveEnvironment(environment!);
 
-      clearInputs();
-
       if (props.onSave) {
         props.onSave(environment!);
       }
@@ -61,29 +59,11 @@ const EnvironmentForm: React.FC<EnvironmentFormProps> = (props) => {
     }
   };
 
-  const clearInputs = () => {
-    const newEnvironment: Environment = new Environment({
-      id: undefined,
-      name: "(New Environment)",
-      projectId: project?.id,
-      globalTimeTravel: 0,
-      notificationUrl: environment.notificationUrl,
-      uploadLocation: environment.uploadLocation,
-      clientDownloadBucket: environment.clientDownloadBucket,
-      clientDownloadKey: environment.clientDownloadKey,
-      downloadUrl: environment.downloadUrl,
-      awsRegion: environment.awsRegion,
-      warningMessage: environment.warningMessage,
-    });
-
-    setEnvironment(newEnvironment);
-  };
-
   return (
     <div className="m-4 flex w-full shrink flex-col rounded-xl bg-slate-50 p-4 font-sans shadow-xl hover:bg-sky-50">
       <div className="full-width flex">
         <h2 className="flex w-full justify-center bg-green-200">
-          {environment ? "Edit Environment" : "New Environment"}
+          {environment ? "Environment" : "New Environment"}
         </h2>
         {/* <button onClick={handleCancel}>Cancel</button> */}
 

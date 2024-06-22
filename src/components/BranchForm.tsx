@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { Branch } from "../models/Branch";
 import { saveBranch, deleteBranch } from "../services/RequestManager";
 import { useStore } from "../store";
 import { GitBranch } from "../models/GitBranch";
@@ -24,15 +23,11 @@ const BranchForm: React.FC = () => {
   //   console.log(`BranchForm: render ${branch?.gitBranch || "new branch"}`);
 
   useEffect(() => {
-    console.log(
-      `useEffect: getBranchesForRepo: project ${project ? project.name : "null"}`,
-    );
+    // console.log(`useEffect: getBranchesForRepo: project ${project ? project.name : "null"}`);
     if (project) {
       getBranchesForRepo(githubAccount!, githubAccessToken!, project!.gitRepo)
         .then((_gitBranches: GitBranch[]) => {
-          console.log(
-            `useEffect: GOT BranchesForRepo ${JSON.stringify(_gitBranches)}`,
-          );
+          console.log(`useEffect: got BranchesForRepo ${JSON.stringify(_gitBranches)}`);
           setGitBranches(_gitBranches);
         })
         .catch((error) => {
@@ -41,6 +36,11 @@ const BranchForm: React.FC = () => {
     }
   }, [project]);
 
+  useEffect(() => {
+    // console.log(`useEffect: branch ${branch?.gitBranch}`);
+    setGitBranch(branch?.gitBranch || "new-git-branch");
+  }, [branch]);
+
   const handleDelete = async () => {
     if (branch) {
       setConfirmDelete(true);
@@ -48,12 +48,10 @@ const BranchForm: React.FC = () => {
   };
 
   const confirmDeleteAction = async () => {
+    // console.log(`confirmDeleteAction : branch ${JSON.stringify(branch)}`);
     if (branch?.id) {
       try {
         await deleteBranch(branch);
-        // if (props.onDelete) {
-        //   props.onDelete(branch);
-        // }
       } catch (error) {
         console.error("Error deleting branch:", error);
       }
@@ -66,16 +64,16 @@ const BranchForm: React.FC = () => {
   };
 
   const handleSave = async () => {
-    console.log(`handleSave : branch ${JSON.stringify(branch)}`);
+    // console.log(`handleSave : branch ${JSON.stringify(branch)}`);
     try {
       await saveBranch(branch!);
-      console.log(`handleSave ${branch?.gitBranch} DONE`);
+    //   console.log(`handleSave ${branch?.gitBranch} DONE`);
 
-      //   clearInputs();
+        // clearInputs();
 
-      //   if (props.onSave) {
-      //     props.onSave(branch!);
-      //   }
+    //   //   if (props.onSave) {
+    //   //     props.onSave(branch!);
+    //   //   }
     } catch (error) {
       console.error("Error saving branch:", error);
     }
@@ -83,7 +81,7 @@ const BranchForm: React.FC = () => {
 
   return (
     <div className="m-4 flex w-full shrink flex-col space-y-2 rounded-xl bg-slate-50 p-4 font-sans shadow-xl hover:bg-sky-50">
-      <h2 className="flex w-full justify-center bg-pink-300">Git Repo</h2>
+      <h2 className="flex w-full justify-center bg-pink-300">Repo</h2>
       <div className="flex">
         <h1>{`${branch?.project?.gitRepo || ""}`}</h1>
       </div>
@@ -113,7 +111,7 @@ const BranchForm: React.FC = () => {
           <h2 className="flex w-full justify-center">Git Branch</h2>
           <select
             className="flex justify-center"
-            value={gitBranch.name}
+            value={gitBranch}
             onChange={(e) => {
               console.log(`setGitBranch ${e.target.value}`);
               setGitBranch(e.target.value);

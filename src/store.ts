@@ -128,10 +128,10 @@ export const useStore = create<StoreState>()(
         deleteBranch: (id: string) =>
           set((state) => ({
             branches: state.branches.filter((branch) => branch.id !== id),
+            branch: null,
           })),
         // setEnvironmentId: (environmentId: string | null) => set((state) => ({ environmentId: environmentId, environment: state.environments.find(e => {e.id == environmentId}) })),
         setEnvironment: (environment: Environment | undefined) => {
-          console.log("setEnvironment");
           set(() => ({ environment: environment }));
         },
         setEnvironments: (environments: Environment[]) =>

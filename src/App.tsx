@@ -16,12 +16,12 @@ function App() {
   const [_branch, _setBranch] = useState<Branch | null>(null);
 
   useEffect(() => {
-    console.log(`App: branch changed to ${branch?.gitBranch}`);
+    // console.log(`App: branch changed to ${branch?.gitBranch}`);
     _setBranch(branch);
   }, [branch]);
 
   useEffect(() => {
-    console.log(`App: environment changed to ${environment?.name}`);
+    // console.log(`App: environment changed to ${environment?.name}`);
   }, [environment]);
 
   return (
